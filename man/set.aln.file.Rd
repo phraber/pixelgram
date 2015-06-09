@@ -7,13 +7,13 @@
 set.aln.file(P, f, file_type = "aa", alignment_format = "fasta")
 }
 \arguments{
-\item{pixgram}{object}
+\item{P}{pixgram object}
 
-\item{alignment}{file name}
+\item{f}{alignment file name}
 
-\item{alignment}{file format}
+\item{file_type}{Specifies alignment file type.  Must be "aa", "nt", or "codon".}
 
-\item{alignment}{file type}
+\item{alignment_format}{Alignment file format, one "fasta", "clustal", "phylip", "msf", or "mase"}
 }
 \value{
 updated pixgram object

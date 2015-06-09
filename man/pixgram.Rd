@@ -62,9 +62,14 @@ The \code{master_name} argument is used when applying transformations to the pix
 
 The option \code{xform_type} is an integer from 0 to 3.  The default (0) means no transformation is applied, yielding a pixel plot that matches the "default" color scheme in the online pixel utility.  That is, positions in all rows are colored.  Other transformations will change matches to each master site as background "transparent" colors or mutational changes using an extensible color scheme.  For details about how the color scheme is defined, run \code{help(pixmap_colors)}.  Option 3 works for amino-acid alignments to show changes in charge and potentially N-linked glycosylation sites, relative to the master sequence, but is slow to compute.  Setting the option \code{xform_master=T} applies the transformation to the master sequence (following the Highlighter plot scheme, the default is F).
 }
+\examples{
+\dontrun{
+  plot( pg <- pixgramr::pixgram(nts=pixgramr::hiv.ref$nts) )
+}
+}
 \seealso{
 External methods used to translate nts to aas and build a tree from nts:
-\code{\link{seqinr::translate}}, \code{\link{ape::bionj}}, and \code{\link{ape::dist.dna}}
+\code{\link{seqinr}{translate}}, \code{\link{ape}{bionj}}, and \code{\link{ape}{dist.dna}}
 
 Online examples that are precursors to this package:
 \url{http://hiv.lanl.gov/content/sequence/pixel/pixel.html} and

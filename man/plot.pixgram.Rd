@@ -4,7 +4,7 @@
 \alias{plot.pixgram}
 \title{Renders the pixgram object}
 \usage{
-\method{plot}{pixgram}(P, xform_type = NULL, xform_master = NULL,
+\method{plot}{pixgram}(x, xform_type = NULL, xform_master = NULL,
   leaf_colors = NULL, tip_labels = NULL, legend_attributes = NULL,
   edge_widths = NULL, edge_colors = NULL, scale_bar = NULL,
   pheno_matrix = NULL, show_top_axis = F, show_tip_label = F,
@@ -13,6 +13,8 @@
   color_lut_type = NULL, annotate_env = F, ...)
 }
 \arguments{
+\item{x}{pixgram object to be plotted}
+
 \item{xform_type}{see \code{help(pixgramr::pixgram())}.}
 
 \item{xform_master}{see \code{help(pixgramr::pixgram())}.}
@@ -43,15 +45,13 @@
 
 \item{vbars}{vertical bars?}
 
-\item{raster_width}{}
+\item{raster_width}{Proportionate width of the pixel plot, e.g. 1 indicates equal width.}
 
-\item{raster_margin}{}
+\item{raster_margin}{Offset in raster portion of the layout, e.g. for heatmap.}
 
-\item{color_lut_type}{}
+\item{color_lut_type}{Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.}
 
 \item{annotate_env}{If true, draw Env landmarks.}
-
-\item{pg}{pixgram object to be plotted}
 }
 \description{
 This layout-compatible method validates the pixgram object, establishes plot coordinates, and draws the pixel and phylogram plots.
@@ -70,5 +70,10 @@ The option \code{color_lut_type} is used to specify alternative columns from the
 Entries in the \code{scale_bar} list argument should be named \code{'pos'} for plot-position coordinates, \code{'lwd'}, \code{'len'} for bar length, in terms of the plot coordinates, \code{'cex'}, and \code{'text'}.
 
 Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pchs'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwds'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'cols'} for colors, \code{'title'}, and \code{'text'}.
+}
+\examples{
+\dontrun{
+  plot( pg <- pixgramr::pixgram(nts=pixgramr::hiv.ref$nts) )
+}
 }
 

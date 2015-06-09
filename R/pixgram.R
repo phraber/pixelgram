@@ -35,11 +35,17 @@
 #' @seealso 
 #' 
 #' External methods used to translate nts to aas and build a tree from nts:
-#' \code{\link{seqinr::translate}}, \code{\link{ape::bionj}}, and \code{\link{ape::dist.dna}}
+#' \code{\link{seqinr}{translate}}, \code{\link{ape}{bionj}}, and \code{\link{ape}{dist.dna}}
 #'
 #' Online examples that are precursors to this package:
 #' \url{http://hiv.lanl.gov/content/sequence/pixel/pixel.html} and
 #' \url{http://hiv.lanl.gov/content/sequence/HIGHLIGHT/highlighter_top.html}.
+#'
+#' @examples
+#' \dontrun{
+#'   plot( pg <- pixgramr::pixgram(nts=pixgramr::hiv.ref$nts) )
+#' }
+#'
 #' @export
 "pixgram"
 
@@ -68,10 +74,7 @@ pixgram.default <- function(tre_file=NULL,
 			    x_lim=NULL,
 			    y_lim=NULL,
 
-                            invert_y=F,
-#                            strip_columns=F,
-#                            region=NULL,
-			    ...) {
+                            invert_y=F) {
 
     message("*** Creating pixgram ***")
 
@@ -154,10 +157,10 @@ pixgram.default <- function(tre_file=NULL,
 
 #' Sets the alignment file, whether nt or aa.  Also sets the refseq.
 #'
-#' @param pixgram object
-#' @param alignment file name
-#' @param alignment file format
-#' @param alignment file type
+#' @param P pixgram object
+#' @param f alignment file name
+#' @param file_type Specifies alignment file type.  Must be "aa", "nt", or "codon".
+#' @param alignment_format Alignment file format, one "fasta", "clustal", "phylip", "msf", or "mase"
 #' @return updated pixgram object
 #' @export
 set.aln.file <- function(P, f, file_type='aa', alignment_format='fasta') {
@@ -243,19 +246,21 @@ set.nt_aln.from.file <- function(P, alignment_format='fasta') {
 
 #' Assign a Newick-formatted tree file to a pixgram object.
 #'
+#' @param x Pixgram object
+#' @param f Name of file containing a Newick tree.
 #' @return Updated pixgram object
 #' @export
-set.tre.file <- function(P, f) {
+set.tre.file <- function(x, f) {
 
-    if (class(P) != "pixgram")
+    if (class(x) != "pixgram")
 	stop("set.tre.file ERROR: Please specify a valid pixgram object")
 
     if (!is.null(f))
-        P$tre_file = f
+        x$tre_file = f
 
-    P = set.tree.from.file(P)
+    x = set.tree.from.file(x)
 
-    return ( P )
+    return ( x )
 }
 
 #' @keywords internal
@@ -725,24 +730,24 @@ pixgram.xform <- function(P) {
 }
 
 #' @export
-print.pixgram <- function(P) summary.pixgram(P)
+print.pixgram <- function(x, ...) summary.pixgram(x, ...)
 
 #' @export
-summary.pixgram <- function(P) {
+summary.pixgram <- function(object, ...) {
 
-    if (class(P) != "pixgram")
+    if (class(object) != "pixgram")
 	stop("pixgram.summary ERROR: Please specify pixgram object")
 
-    message(paste("Tree has", length(P$tre$tip.label), "leaves."))
+    message(paste("Tree has", length(object$tre$tip.label), "leaves."))
 
-    if (!is.null(P$nts))
-        message(paste0("Aligned nts: ", dim(P$nts)[1],
-                     " sequences, length ", dim(P$nts)[2]))
+    if (!is.null(object$nts))
+        message(paste0("Aligned nts: ", dim(object$nts)[1],
+                     " sequences, length ", dim(object$nts)[2]))
 
-    if (!is.null(P$aas))
-        message(paste0("Aligned aas: ", dim(P$aas)[1],
-                     " sequences, length ", dim(P$aas)[2]))
+    if (!is.null(object$aas))
+        message(paste0("Aligned aas: ", dim(object$aas)[1],
+                     " sequences, length ", dim(object$aas)[2]))
 
-    if (!is.null(P$master_name))
-        message(paste0("Using '", P$master_name, "' for master sequence."))
+    if (!is.null(object$master_name))
+        message(paste0("Using '", object$master_name, "' for master sequence."))
 }

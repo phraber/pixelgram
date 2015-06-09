@@ -2,6 +2,7 @@ citHeader("To cite the lassie method in publications, please use:")
 
 citEntry(entry = "Unpublished",
  title	       = "Longitudinal Antigenic Sequences and Sites from Intrahost Evolution (LASSIE) Identifies Immune-Selected HIV Variants over Time",
+ note	       = "Submitted, LA-UR-15-24067, LA-CC-2015-053",
  author	       = personList(as.person("Peter Hraber"), 
  	 	    as.person("Bette Korber"), 
 		    as.person("Kshitij Wagh"),

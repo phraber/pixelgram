@@ -4,7 +4,12 @@
 \alias{set.tre.file}
 \title{Assign a Newick-formatted tree file to a pixgram object.}
 \usage{
-set.tre.file(P, f)
+set.tre.file(x, f)
+}
+\arguments{
+\item{x}{Pixgram object}
+
+\item{f}{Name of file containing a Newick tree.}
 }
 \value{
 Updated pixgram object

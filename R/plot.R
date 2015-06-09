@@ -16,7 +16,7 @@
 #'
 #' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pchs'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwds'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'cols'} for colors, \code{'title'}, and \code{'text'}.
 #' 
-#' @param pg pixgram object to be plotted
+#' @param x pixgram object to be plotted
 #' @param xform_type see \code{help(pixgramr::pixgram())}.
 #' @param xform_master see \code{help(pixgramr::pixgram())}.
 #' @param leaf_colors vector of tree leaf colors; can be colors or integers
@@ -32,12 +32,18 @@
 #' @param no_margin No margin?  This is passed to \code{ape::plot.phylo()}.
 #' @param plot_margin_points Plot margin points?
 #' @param vbars vertical bars?
-#' @param raster_width
-#' @param raster_margin
-#' @param color_lut_type
+#' @param raster_width Proportionate width of the pixel plot, e.g. 1 indicates equal width.
+#' @param raster_margin Offset in raster portion of the layout, e.g. for heatmap.
+#' @param color_lut_type Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.
 #' @param annotate_env If true, draw Env landmarks.
+#'
+#' @examples
+#' \dontrun{
+#'   plot( pg <- pixgramr::pixgram(nts=pixgramr::hiv.ref$nts) )
+#' }
+#'
 #' @export
-plot.pixgram <- function(P,
+plot.pixgram <- function(x,
     xform_type=NULL,
     xform_master=NULL,
     leaf_colors=NULL,
@@ -61,34 +67,34 @@ plot.pixgram <- function(P,
     annotate_env=F,
     ...) { #, hbars=NULL) {
 
-    if (class(P) != "pixgram")
+    if (class(x) != "pixgram")
 	stop("plot.pixgram ERROR: Please specify pixgram object")
 
-    P <- pixgram.validate(P)
-    P <- pixgram.reorder(P)
+    x <- pixgram.validate(x)
+    x <- pixgram.reorder(x)
 
-    if (is.null(P$nt_master) & is.null(P$aa_master))
-        P <- set.master(P)
+    if (is.null(x$nt_master) & is.null(x$aa_master))
+        x <- set.master(x)
 
     if (!is.null(raster_margin))
-	P$raster_margin = raster_margin
+	x$raster_margin = raster_margin
 
     if (!is.null(raster_width))
-	P$raster_width = raster_width
+	x$raster_width = raster_width
 
     if (!is.null(xform_type))
-	P$xform_type = xform_type
+	x$xform_type = xform_type
 
     if (!is.null(xform_master))
-	P$xform_master = xform_master
+	x$xform_master = xform_master
 
-    if (!is.null(P$nt_master) | !is.null(P$aa_master))
-        P <- pixgram.xform(P)
+    if (!is.null(x$nt_master) | !is.null(x$aa_master))
+        x <- pixgram.xform(x)
 
-#    if (!is.null(x_lim)) P$x_lim = x_lim # should sanitize
-#    if (!is.null(y_lim)) P$y_lim = y_lim
+#    if (!is.null(x_lim)) x$x_lim = x_lim # should sanitize
+#    if (!is.null(y_lim)) x$y_lim = y_lim
 
-    R <- P
+    R <- x
     class(R) <- "pixgram"
 
 #    old.par = par()
@@ -284,7 +290,7 @@ add.legend <- function(L) {
 }
 
 #' @keywords internal
-pixgram.tree.plot <- function(P,
+pixgram.tree.plot <- function(x,
     leaf_colors=leaf_colors,
     tip_labels=tip_labels,
     edge_widths=edge_widths,
@@ -298,10 +304,10 @@ pixgram.tree.plot <- function(P,
     scale_bar=scale_bar,
     ...) {
 
-    if (class(P) != "pixgram")
+    if (class(x) != "pixgram")
 	stop("pixgram.tree.plot ERROR: Please specify pixgram object")
 
-    R <- P
+    R <- x
     message("*** pixgram.tree.plot ***\n")
     class(R) <- "pixgram"
 
