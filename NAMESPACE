@@ -1,0 +1,8 @@
+S3method(pixgram,default)
+S3method(plot,pixgram)
+S3method(print,pixgram)
+S3method(summary,pixgram)
+export(pixgram)
+export(pixgram.default)
+export(set.aln.file)
+export(set.tre.file)

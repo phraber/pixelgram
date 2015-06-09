@@ -1,0 +1,24 @@
+#' Population-level (between-host) HIV-1 Subtype reference alignment
+#'
+#' An alignment of 39 M HIV-1 nucleotide sequences selected to represent the
+#' non-recombinant M group clades A through K.
+#'
+#' Genome-length aligned sequences are available at the link listed below.
+#' Data here include only the gp41 ectodomain, a 399-nt region (HXB2 sites
+#' 7881 through 8279) excised from the envelope glycoprotein (env), i.e. gp160
+#' nucleotides 1657-2055 (gp160 amino acids 553-685) and gp41 nucleotides
+#' 124-522 (gp41 amino acids 42-174).
+#'
+#' @format
+#' \describe{
+#'   \item{nts}{Sequence names contain five dot-separated fields, to indicate
+#' clade, country sampled, year sampled, common name, and database accession
+#' number.  The sequence Ref-H.B.00.00B4001.FJ711703 contains IUPAC ambiguity
+#' codes.}
+#'   \item{tre}{The Newick-formatted phylogeny was inferred by phyml3 with GTR
+#' and Gamma4+I.}
+#'   \item{clade}{M-group subtype (clade) designation, parsed from the sequence name.}
+#' }
+#' @source \url{http://hiv.lanl.gov/content/sequence/HIV/REVIEWS/RefSeqs2005/Refseqs05.html}
+#' @source \url{http://hiv.lanl.gov/content/sequence/NEWALIGN/Align.html}
+"hiv.ref"

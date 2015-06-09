@@ -1,0 +1,29 @@
+citHeader("To cite the lassie method in publications, please use:")
+
+citEntry(entry = "Unpublished",
+ title	       = "Longitudinal Antigenic Sequences and Sites from Intrahost Evolution (LASSIE) Identifies Immune-Selected HIV Variants over Time",
+ author	       = personList(as.person("Peter Hraber"), 
+ 	 	    as.person("Bette Korber"), 
+		    as.person("Kshitij Wagh"),
+		    as.person("Elena E. Giorgi"),
+		    as.person("Tanmoy Bhattacharya"),
+		    as.person("S. Gnanakaran"),
+		    as.person("Alan S. Lapedes"),
+		    as.person("Gerald H. Learn"),
+		    as.person("Edward F. Kreider"),
+		    as.person("Yingying Li"),
+		    as.person("George M. Shaw"),
+		    as.person("Beatrice H. Hahn"),
+		    as.person("David C. Montefiori"),
+		    as.person("S. Munir Alam"),
+		    as.person("Mattia Bonsignori"),
+		    as.person("M. Anthony Moody"),
+		    as.person("Hua-Xin Liao"),
+		    as.person("Feng Gao"),
+		    as.person("Barton F. Haynes")),
+ year	       = "2015",
+ url	       = "https://github.com/phraber/lassie",
+ textVersion= paste("Hraber P, Korber B, Wagh K, Giorgi EE, Bhattacharya T, et al. 2015.",
+"Longitudinal Antigenic Sequences and Sites from Intrahost Evolution (LASSIE) Identifies Immune-Selected HIV Variants over Time", "Submitted", "LA-UR-15-24067", "LA-CC-2015-053"))
+
+citFooter("If you used the included CH505 sequence data in a publication, please cite Liao et al., 2013 (http://ncbi.nlm.nih.gov/pubmed/23552890) and Gao et al., 2014 (http://ncbi.nlm.nih.gov/pubmed/25065977).  Thank you!")

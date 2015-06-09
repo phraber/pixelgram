@@ -1,0 +1,17 @@
+Package: pixgramr
+Type: Package
+Title: Pixel View with Accompanying Phylogram of Sequence Alignment
+Version: 1.0
+Date: 2015-06-01
+Author: Peter Hraber
+Maintainer: Peter Hraber <peterhraber@gmail.com>
+Description: This package will plot a nucleotide and/or amino acid sequence alignment together with a user-provided phylogenetic tree.  Alignments are shown in pixel (raster) format, whereby sequences correspond to rows and follow the tree leaf order.  Options are provided to specify a reference sequence or consensus to transform the pixel view, whereby only sites that mismatch the reference sequence are shown.  This enables viewing sequence variation in light of the phylogeny.
+Depends: R (>= 3.1.1)
+License: GPL2
+LazyData: true
+Imports: seqinr,
+    ape
+Suggests: knitr,
+    testthat,
+    devtools
+VignetteBuilder: knitr
