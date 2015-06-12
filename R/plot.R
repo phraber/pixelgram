@@ -4,23 +4,22 @@
 #'
 #' The x-axis of the plot coordinate system is positive for the tree-plotting region, and negative for the pixel-plotting region.  Setting \code{raster_width} rescales the minimum x-axis value by this factor.  The default is 1, so the pixel and raster plots are equal width.  The \code{raster_margin} parameter rescales the right (least negative) edge of the pixel plot, to leave a gap between pixel and tree, e.g. to include a heatmap of phyenotypic assay results.
 #'
-#' The tree can be decorated by passing \code{leaf_colors}, \code{tip_labels}, \code{edge_widths}, and \code{edge_colors}.  See the last vignette example.
+#' Tree tip labels can be added by passing a list called \code{tip_labels}, with elements named "pch", "bgs", and "col".  See vignette.  The tree can be further decorated by passing \code{leaf_colors}, \code{edge_widths}, and \code{edge_colors}.  See the last vignette example.
 #'
 #' If defined, data in the \code{pheno_matrix} are plotted in the margin between tree and pixel plots.  Entry values should be positive (non-zero) integers, which are interpreted as indices to \code{palette()}, color names, or color values.  Matrix rows must have names that match tree tip-label (i.e. \code{pg$tre$tip.label}  strings, or they will not be plotted.  This is to facilitate their proper ordering, which follows that of the leaves on the tree.  All columns are plotted, and in the order given.  However, column widths are scaled to fit together into the marginal area provided within the pixel-plot area (x-values < 0) by \code{raster_margin}.
-#' 
+#'
 #' The x- and y-axis lim arguments are provided to facilitate plotting multiple trees on the same scale in different panels.
-#' 
+#'
 #' The option \code{color_lut_type} is used to specify alternative columns from the defined color scheme (see \code{help(pixmap_colors)}).  For example, 'taylor' in the vignette uses the colors described in Wittgensteinean fashion by W. Taylor, Protein Engineering, Vol 10 , 743-746 (1997).
-#' 
+#'
 #' Entries in the \code{scale_bar} list argument should be named \code{'pos'} for plot-position coordinates, \code{'lwd'}, \code{'len'} for bar length, in terms of the plot coordinates, \code{'cex'}, and \code{'text'}.
 #'
 #' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pchs'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwds'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'cols'} for colors, \code{'title'}, and \code{'text'}.
-#' 
+#'
 #' @param x pixgram object to be plotted
 #' @param xform_type see \code{help(pixgramr::pixgram())}.
 #' @param xform_master see \code{help(pixgramr::pixgram())}.
 #' @param leaf_colors vector of tree leaf colors; can be colors or integers
-#' @param tip_labels vector of tree tip labels
 #' @param legend_attributes Named list of entries that go into the legend
 #' @param edge_widths tree edge widths
 #' @param edge_colors tree edge colors
@@ -30,12 +29,18 @@
 #' @param show_tip_label Show taxon labels on tree tips?
 #' @param selected_rows Vector of selected taxa
 #' @param no_margin No margin?  This is passed to \code{ape::plot.phylo()}.
+#' @param tip_labels List for adding tree tip labels; see details.
 #' @param plot_margin_points Plot margin points?
 #' @param vbars vertical bars?
 #' @param raster_width Proportionate width of the pixel plot, e.g. 1 indicates equal width.
 #' @param raster_margin Offset in raster portion of the layout, e.g. for heatmap.
 #' @param color_lut_type Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.
+#' @param notes Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.
 #' @param annotate_env If true, draw Env landmarks.
+#' @param show_tree Show the tree? If not, only show the pixel plot.
+#' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixgram output.
+#' @param sub Plot subtitle, i.e. region sequenced.  If specified, it appears with "site" below the pixel plot.
+#' @param ... dots, passed to ape::plot.phylo()
 #'
 #' @examples
 #' \dontrun{
@@ -64,8 +69,14 @@ plot.pixgram <- function(x,
     color_lut_type=NULL,
 #    x_lim=NULL,
 #    y_lim=NULL,
+    notes=NULL,
     annotate_env=F,
+    show_tree=NULL,
+    main=NULL,
+    sub=NULL,
     ...) { #, hbars=NULL) {
+
+    dots = list(...)
 
     if (class(x) != "pixgram")
 	stop("plot.pixgram ERROR: Please specify pixgram object")
@@ -118,24 +129,27 @@ plot.pixgram <- function(x,
 #    }
 
 #    if (!is.null(R$palette)) palette(R$palette)
+    if (!is.null(show_tree)) R$show_tree = show_tree
+    if (!is.null(main)) R$main = main
+    if (!is.null(sub)) R$sub = sub
 
-    R <- pixgram.tree.plot(R,
-	leaf_colors=leaf_colors,
-	tip_labels=tip_labels,
-	legend_attributes=legend_attributes,
-	edge_widths=edge_widths,
-	edge_colors=edge_colors,
-	no_margin=no_margin,
-	pheno_matrix=pheno_matrix,
-	plot_margin_points=plot_margin_points,
-	show_tip_label=show_tip_label,
-	selected_rows=selected_rows,
-	scale_bar=scale_bar,
-	...)#, hbars=hbars)
+      R <- pixgram.tree.plot(R,
+                             leaf_colors=leaf_colors,
+                             tip_labels=tip_labels,
+                             legend_attributes=legend_attributes,
+                             edge_widths=edge_widths,
+                             edge_colors=edge_colors,
+                             no_margin=no_margin,
+                             pheno_matrix=pheno_matrix,
+                             plot_margin_points=plot_margin_points,
+                             show_tip_label=show_tip_label,
+                             selected_rows=selected_rows,
+                             scale_bar=scale_bar,
+                             ...)#, hbars=hbars)
 
     if (is.null(color_lut_type)) {
-	if (!is.null(R$aas)) 
-	    R$color_lut_type = "aa" 
+	if (!is.null(R$aas))
+	    R$color_lut_type = "aa"
     } else {
 	if (color_lut_type %in% colnames(pixmap_colors))
 	    R$color_lut_type = color_lut_type
@@ -145,17 +159,18 @@ plot.pixgram <- function(x,
         R <- pixgram.raster.aa(R, vbars=vbars, show_top_axis=show_top_axis)
 
     if (!is.null(R$nts))
-	R$color_lut_type = "nt" 
+	R$color_lut_type = "nt"
 
     if (!is.null(R$nts) & !R$is_orf)
         R <- pixgram.raster.nt(R, vbars=vbars, show_top_axis=show_top_axis)
 # to do: add axis options or ...
 
-     if (annotate_env & !is.null(R$refseq_lut))
- 	annotate.env(refseq_lut=R$refseq_lut,
- 	    show_marginal_annotation=T,
- 	    y_lim=c(R$y_lim[1] + ifelse(R$invert_y==T, -1/2, 1/2),
- 		R$y_lim[2] - ifelse(R$invert_y==T, -1/2, 1/2)))
+# the second condition/s implicitly assume env with hxb2 present
+    if ((!is.null(notes) & is.list(notes)) | 
+	(annotate_env & !is.null(R$refseq_lut)))
+ 	    annotate.region(R, notes=notes,
+ 	        y_lim=c(R$y_lim[1] + ifelse(R$invert_y, -1/2, 1/2),
+ 		    R$y_lim[2] - ifelse(R$invert_y, -1/2, 1/2)))
 
 #    par(old.par)
 #    palette(old.pal)
@@ -165,6 +180,8 @@ plot.pixgram <- function(x,
 
 #' @keywords internal
 color.node <- function(edge_colors, this_tree, node) {
+
+    default.color = ifelse(is.numeric(edge_colors), 1, "#444444")
 
     ancestor = this_tree$edge[which(this_tree$edge[,2]==node), 1]
 
@@ -185,7 +202,7 @@ color.node <- function(edge_colors, this_tree, node) {
             for (sib in c(1:length(sibs))) {
 
                 if (edge_colors[which(this_tree$edge[,2] == sibs[sib])] != mycolor) {
-                    if (edge_colors[which(this_tree$edge[,2] == sibs[sib])] != "#444444") { # default.edge.color
+                    if (edge_colors[which(this_tree$edge[,2] == sibs[sib])] != default.color) { # default.edge.color
                         is_same_color = F
                     }
                 }
@@ -195,7 +212,7 @@ color.node <- function(edge_colors, this_tree, node) {
         if (is_same_color) {
             edge_colors[which(this_tree$edge[,2] == ancestor)] = mycolor
         } else {
-            edge_colors[which(this_tree$edge[,2] == ancestor)] = "#444444" # default.edge.color
+            edge_colors[which(this_tree$edge[,2] == ancestor)] = default.color # default.edge.color
         }
     }
 
@@ -208,7 +225,8 @@ color.node <- function(edge_colors, this_tree, node) {
 #' @keywords internal
 color.edges <- function(T, tip_colors) {
 
-    edge_colors <- rep("#444444", length(T$edge)) # default.edge.color
+    default.color = ifelse(is.numeric(tip_colors), 1, "#444444")
+    edge_colors <- rep(default.color, length(T$edge)) # default.edge.color
 
     for (i in 1:length(T$tip.label))
         edge_colors[which(T$edge[,2] == i)] <- tip_colors[i]
@@ -312,16 +330,16 @@ pixgram.tree.plot <- function(x,
     class(R) <- "pixgram"
 
     if (is.null(R$x_lim) & is.null(R$y_lim)) {
-	tree_out <- ape::plot.phylo(R$tre, font=1, 
+	tree_out <- ape::plot.phylo(R$tre, font=1,
 	    no.margin=no_margin, plot=F, ...)
     } else if (!is.null(R$x_lim) &  is.null(R$y_lim)) {
-	tree_out <- ape::plot.phylo(R$tre, font=1, 
+	tree_out <- ape::plot.phylo(R$tre, font=1,
 	    no.margin=no_margin, x.lim=R$x_lim, plot=F, ...)
     } else if ( is.null(R$x_lim) & !is.null(R$y_lim)) {
-	tree_out <- ape::plot.phylo(R$tre, font=1, 
+	tree_out <- ape::plot.phylo(R$tre, font=1,
 	    no.margin=no_margin, y.lim=R$y_lim, plot=F, ...)
     } else {
-	tree_out <- ape::plot.phylo(R$tre, font=1, 
+	tree_out <- ape::plot.phylo(R$tre, font=1,
 	    no.margin=no_margin, x.lim=R$x_lim, y.lim=R$y_lim, plot=F, ...)
     }
 
@@ -399,8 +417,9 @@ pixgram.tree.plot <- function(x,
   }
 #    show_tip_label = T #ifelse(is.null(tip_labels), T, F)
     safe.tiplabels = R$tre$tip.label
-    R$tre$tip.label = sapply(1:length(R$tre$tip.label), function(i)
-        paste("  ", R$tre$tip.label[i]))
+    if (is.character(tip_labels$pch))
+        R$tre$tip.label = sapply(1:length(R$tre$tip.label), function(i)
+            paste0(" ", tip_labels$pch[i]))
     par(new=T)
 
     tree_out <- ape::plot.phylo(R$tre,
@@ -412,17 +431,17 @@ pixgram.tree.plot <- function(x,
                                 plot=R$show_tree,
 				edge.width=edge_widths,
                                 edge.color=edge_colors,
-                                tip.color=tip_labels$col, # NOTE THIS IS NOT ROBUST! assumes tree order is unchanged
-                                show.tip.label=show_tip_label, ...) # 
+#                                tip.color=tip_labels$col, # NOTE THIS IS NOT ROBUST! assumes tree order is unchanged
+                                show.tip.label=show_tip_label, ...) #
 
     R$tre$tip.label = safe.tiplabels
 
         # design issue here is how to map leaf names to { pch, bg, col }
-    if (!is.null(tip_labels) & !is.null(tip_labels$pchs)) {
+    if (!is.null(tip_labels) & !is.null(tip_labels$pch)) {
 
-        if (!is.null(tip_labels) & length(which(is.na(tip_labels$pchs))) > 1)
-	    stop(paste("pixgram ERROR! Undefined tip_labels$pchs:",
-		paste(R$tre$tip.label[which(is.na(tip_labels$pchs))],
+        if (!is.null(tip_labels) & length(which(is.na(tip_labels$pch))) > 1)
+	    stop(paste("pixgram ERROR! Undefined tip_labels$pch:",
+		paste(R$tre$tip.label[which(is.na(tip_labels$pch))],
 		    collapse=" ")))
 
 	if (!is.null(tip_labels) & length(which(is.na(tip_labels$col))) > 1)
@@ -430,9 +449,10 @@ pixgram.tree.plot <- function(x,
 		paste(R$tre$tip.label[which(is.na(tip_labels$col))],
 		    collapse=" ")))
 
-        ape::tiplabels(pch=tip_labels$pchs,
+	if (R$show_tree & is.numeric(tip_labels$pch))
+            ape::tiplabels(pch=tip_labels$pch,
                   col=tip_labels$col,
-                  bg=tip_labels$bgs,
+                  bg=tip_labels$bgs, #adj=0,
                   cex=R$my_cex, lwd=1/2)
 
 # to do: position properly with raster_margin considered:
@@ -445,16 +465,16 @@ pixgram.tree.plot <- function(x,
 
 	    if (!is.null(tip_labels$col)) {
 
-	        if (is.null(tip_labels$pchs)) {
+	        if (is.null(tip_labels$pch)) {
 		    for (i in 1:length(R$tre$tip.label))
 		        points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2)
 		} else {
 		    if (length(tip_labels$bgs)==1)
-			tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pchs))
+			tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pch))
 
 		    for (i in 1:length(R$tre$tip.label))
 		        points(-0.01 * R$raster_width * R$x_lim[2], i,
-			    col=tip_labels$col[i], pch=tip_labels$pchs[i], bg=tip_labels$bgs[i], cex=R$my_cex, lwd=1/2)
+			    col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
 		}
 	    }
@@ -509,16 +529,17 @@ pixgram.tree.plot <- function(x,
 
 	        if (!is.null(tip_labels$col)) {
 
-	            if (is.null(tip_labels$pchs)) {
+	            if (is.null(tip_labels$pch)) {
 			for (i in 1:length(R$tre$tip.label))
 		            points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2)
 		    } else {
 			if (length(tip_labels$bgs)==1)
-			    tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pchs))
+			    tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pch))
 
 			for (i in 1:length(R$tre$tip.label))
 		            points(-0.01 * R$raster_width * R$x_lim[2], i,
-				col=tip_labels$col[i], pch=tip_labels$pchs[i], bg=tip_labels$bgs[i], cex=R$my_cex, lwd=1/2)
+				col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], 
+				cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
 		    }
 		}
@@ -543,7 +564,7 @@ pixgram.tree.plot <- function(x,
 	sb.ypos = ifelse(is.null(scale_bar$pos[2]), NULL, scale_bar$pos[2])
 
 	ape::add.scale.bar(sb.xpos, sb.ypos, length=scale_bar$len,
-	    lwd=scale_bar$lwd, cex=scale_bar$cex/100)
+	    lwd=scale_bar$lwd, cex=1/1000)
 
 	if (R$invert_y == T) {
 	    text(sb.xpos+scale_bar$len/2, sb.ypos-1, scale_bar$text,
@@ -556,7 +577,7 @@ pixgram.tree.plot <- function(x,
 
     R$x_lim <- c(tree_out$x.lim[1], tree_out$x.lim[2])
 
-    R
+    return ( R )
 }
 
 #' @keywords internal
@@ -604,97 +625,125 @@ pixgram.raster.nt <- function(P, vbars, show_top_axis) {
              -R$raster_width * R$x_lim[2] * R$raster_margin, 1/2,
              border='black', col=NA, lwd=1/2)
 
-    R
+    return ( R )
 }
 
 
 #' @keywords internal
-annotate.env <- function(refseq_lut=NULL,
-    show_marginal_annotation=FALSE,
-    y_lim=NULL) {
+annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 
-    message("*** annotate.env ***\n")
+    message("*** annotate.region ***\n")
 
-#    if (!is.null(plot_annotation)) {
-#	Lannotation <- plot_annotation$Lannotation
-#	Rannotation <- plot_annotation$Rannotation
-#	 annotation <- plot_annotation$annotation
-#    } else {
+    clr <- "#88888844"
 
-#	if (!is.null(region) & grepl("^gp", region)) {
-	    Lannotation <- c(132, 185, 276, 363, 396, 459)
-	    Rannotation <- c(152, 190, 283, 373, 410, 466)
-	    Nannotation <- c('V1', 'V2', 'Loop D', 'CD4 Loop', 'V4', 'V5')
+    if (is.null(notes)) {
+	notes <- list()
+	notes$Lhs <- c(132, 185, 276, 396, 459, 511, 30)
+	notes$Rhs <- c(152, 190, 283, 410, 466, 512, 31)
+	notes$txt <- c('V1', 'V2', 'Loop D', 'V4', 'V5', '', '')
+#	notes$Lhs <- c(132, 185, 276, 363, 396, 459, 511, 30)
+#	notes$Rhs <- c(152, 190, 283, 373, 410, 466, 512, 31)
+#	notes$txt <- c('V1', 'V2', 'Loop D', 'CD4 Loop', 'V4', 'V5', '', '')
+    } else {
+	if (is.null(notes$Lhs) | is.null(notes$Rhs))
+	    return (R)
+	if (!is.numeric(notes$Lhs) | !is.numeric(notes$Rhs))
+	    return (R)
+
+	if (!is.null(notes$txt))
+	    if (!character(notes$col))
+		return (R)
+
+	if (!is.null(notes$col))
+	    clr <- notes$col
+    }
+
 #	} else if (!is.null(region) & grepl("^V", region)) {
-#	    Lannotation <- c(26, 50, 98)
-#	    Rannotation <- c(35, 65, 110)
-#	     annotation <- c('H1', 'H2', 'H3')
+#	    Lnotes <- c(26, 50, 98)
+#	    Rnotes <- c(35, 65, 110)
+#	     notes <- c('H1', 'H2', 'H3')
 #	} else {
-#	    Lannotation <- NULL
-#	    Rannotation <- NULL
-#	     annotation <- NULL
+#	    Lnotes <- NULL
+#	    Rnotes <- NULL
+#	     notes <- NULL
 #	}
 #    }
 
-    if (is.null(y_lim))
-	y_lim = (usr <- par('usr'))[c(3,4)]
+    if (is.null(y_lim)) y_lim = (usr <- par('usr'))[c(3,4)]
+
+### need an efficient way to transform alignment columns to x-axis coordinates
+
+    axis_xlim = c(-R$raster_width*R$x_lim[2], -R$raster_width*R$x_lim[2]*R$raster_margin)
+
+    my_slope = ifelse(!is.null(R$aas), ncol(R$aas)-1, ncol(R$nts)-1)/
+            (axis_xlim[2]-axis_xlim[1])
+
+    refseq_lut = R$refseq_lut
+    refseq_lut$aln = (refseq_lut$aln - 1)/my_slope - R$raster_width * R$x_lim[2]
 
     if (!is.null(refseq_lut)) {
 
- 	for (x in 1:length(Nannotation)) {
+ 	for (x in 1:length(notes$txt)) {
 
  	    x_1 = NULL
-	    x_1 <- refseq_lut$aln[min(which(refseq_lut$l==Lannotation[x]))]
+	    x_1 <- refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[x]))]
 
  	    x_2 = NULL
-	    x_2 <- refseq_lut$aln[max(which(refseq_lut$r==Rannotation[x]))]
+	    x_2 <- refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[x]))]
 
  	    if (!is.null(x_1) & !is.null(x_2) & !is.na(x_1) & !is.na(x_2))
- 		rect(x_1, y_lim[1], x_2, y_lim[2], border=NA, col="grey")
+ 		rect(x_1, y_lim[1], x_2, y_lim[2], border=NA, col=clr)
  	}
 
-        # gp120/gp41 boundary
-	x_pos = NULL
-	x_pos <- mean(refseq_lut$aln[min(which(refseq_lut$l==511))],
-	    refseq_lut$aln[max(which(refseq_lut$r==512))])
+#         # gp120/gp41 boundary
+# 	x_pos = NULL
+# 	x_pos <- mean(refseq_lut$aln[min(which(refseq_lut$l==511))],
+# 	    refseq_lut$aln[max(which(refseq_lut$r==512))])
 
-	if (!is.null(x_pos) & !is.na(x_pos))
-	    segments(x_pos, y_lim[1], x_pos, y_lim[2], col="grey", lwd=1, lty=2)
+# 	if (!is.null(x_pos) & !is.na(x_pos))
+# 	    segments(x_pos, y_lim[1], x_pos, y_lim[2], col=clr, lwd=1/2)
 
-        # signal peptide
-	x_pos = NULL
-	x_pos <- mean(refseq_lut$aln[which(refseq_lut$l==30&refseq_lut$r==30)],
-	              refseq_lut$aln[which(refseq_lut$l==31&refseq_lut$r==31)])
+#         # signal peptide
+# 	x_pos = NULL
+# 	x_pos <- mean(refseq_lut$aln[which(refseq_lut$l==30&refseq_lut$r==30)],
+# 	              refseq_lut$aln[which(refseq_lut$l==31&refseq_lut$r==31)])
 
-	if (!is.null(x_pos) & !is.na(x_pos))
-	    segments(x_pos, y_lim[1], x_pos, y_lim[2], col="grey", lwd=1, lty=2)
+# 	if (!is.null(x_pos) & !is.na(x_pos))
+# 	    segments(x_pos, y_lim[1], x_pos, y_lim[2], col=clr, lwd=1/2)
 
-#	if (!is.null(x_pos) & !is.na(x_pos)) 
+#	if (!is.null(x_pos) & !is.na(x_pos))
 #	    abline(v=x_pos, col=5, lwd=1, lty=3)
 
-        ### add margin text and legend if top plot
- 	if (show_marginal_annotation) {
+        ### annotate text at top of plot here so we don't draw boxes over text
+ 	if (!is.null(notes$txt)) {
 
- 	    for (X in 1:length(Nannotation)) {
+ 	    for (i in 1:length(notes$txt)) {
 
- 		l.xpos=NULL
-		l.xpos <- refseq_lut$aln[min(which(refseq_lut$l==Lannotation[X]))]
+ 		l.xpos <- NULL
+		l.xpos = refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[i]))]
 
- 		r.xpos=NULL
-		r.xpos <- refseq_lut$aln[max(which(refseq_lut$r==Rannotation[X]))]
+ 		r.xpos <- NULL
+		r.xpos = refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[i]))]
 
- 		my_padj <- ifelse(X < 4, 1/2, ifelse(X==4, 1, 0))
+		usr <- par('usr')
 
- 		if (!is.null(r.xpos) & !is.null(r.xpos))
- 		    mtext(Nannotation[X], 3, at=(l.xpos + r.xpos)/2,
- 			line=1, adj=1/2, padj=my_padj, cex=8/12) # not really marginal, is it?
+                #  consider inverted y-axis values
+		y.pos <- ifelse(usr[3] < usr[4],
+		    usr[4] - (usr[4] - usr[3])*0.995,
+		    usr[3] - (usr[3] - usr[4])*0.995)
+
+		n_s <- ifelse(usr[3] < usr[4], 3, 1) # north or south?
+
+ 		if (!is.null(l.xpos) & !is.null(r.xpos) &
+		      !is.na(l.xpos) & !is.na(r.xpos))
+ 		    text(mean(c(l.xpos, r.xpos)), y.pos, notes$txt[i], pos=n_s,
+			cex=2/3)
 
  	    }
         }
     }
 
-    mtext("Site", side=1, outer=T, line=6/4)
-
+    R
 }
 
 #' @keywords internal
@@ -823,12 +872,12 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
  	}
      }
 
-    #if (!is.null(R$ptid))
-	#mtext(paste0(R$ptid, " "), 3, at=0, line=0, cex=1, outer=F, adj=1)
+    if (!is.null(R$main))
+      mtext(paste0(R$main, " "), 3, at=0, line=0, cex=1, outer=F, adj=1)
 
-#    if (!is.null(R$region))
-#	mtext(R$region, 1, at=mean(axis_xlim), line=1/2, cex=my_cexl)
-#	mtext(R$region, 3, at=0, line=0, cex=1, outer=F, adj=1/2, font=3)
+    if (!is.null(R$sub))
+    	mtext(paste(R$sub, "site"), 1, at=mean(axis_xlim), line=1/2, cex=my_cexl)
+	    # mtext(R$sub, 3, at=0, line=0, cex=1, outer=F, adj=1/2, font=3)
 
     R
 }

@@ -4,7 +4,12 @@
 \alias{pixgram}
 \title{Create (construct) a pixgram object.}
 \usage{
-pixgram(...)
+pixgram(tre_file = NULL, tre = NULL, nts_file = NULL, nts = NULL,
+  aas_file = NULL, aas = NULL, alignment_format = "fasta", is_orf = F,
+  refseq_lut = NULL, refseq_name = "HXB2", excise_refseq = T,
+  master_name = "__first__", xform_master = F, xform_type = 0,
+  show_tree = T, raster_width = 1, raster_margin = 0.025, x_lim = NULL,
+  y_lim = NULL, invert_y = F, main = NULL, sub = NULL)
 }
 \arguments{
 \item{tre_file}{File containing Newick-formatted tree.}
@@ -46,6 +51,10 @@ pixgram(...)
 \item{y_lim}{Range of y coordinates to use for plotting, set automatically.}
 
 \item{invert_y}{Should the y-axis be inverted?}
+
+\item{main}{Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixgram output.}
+
+\item{sub}{Plot subtitle, i.e. region sequenced.  If specified, it appears with "site" below the pixel plot.}
 }
 \value{
 pixgram object

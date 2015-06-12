@@ -9,5 +9,5 @@
 #' @seealso \code{\link{pixgram}} \code{\link{plot}}
 NULL
 
-#' @export
-pixgram <- function(...) UseMethod("pixgram")
+# @export
+#pixgram <- function(...) UseMethod("pixgram")

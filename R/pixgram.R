@@ -30,10 +30,13 @@
 #' @param x_lim Range of x coordinates to use for plotting, set automatically.
 #' @param y_lim Range of y coordinates to use for plotting, set automatically.
 #' @param invert_y Should the y-axis be inverted?
+#' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixgram output.
+#' @param sub Plot subtitle, i.e. region sequenced.  If specified, it appears with "site" below the pixel plot.
+#'
 #' @return pixgram object
 #'
-#' @seealso 
-#' 
+#' @seealso
+#'
 #' External methods used to translate nts to aas and build a tree from nts:
 #' \code{\link{seqinr}{translate}}, \code{\link{ape}{bionj}}, and \code{\link{ape}{dist.dna}}
 #'
@@ -47,9 +50,8 @@
 #' }
 #'
 #' @export
-"pixgram"
 
-pixgram.default <- function(tre_file=NULL,
+pixgram <- function(tre_file=NULL,
                             tre=NULL,
                             nts_file=NULL,
                             nts=NULL,
@@ -74,7 +76,8 @@ pixgram.default <- function(tre_file=NULL,
 			    x_lim=NULL,
 			    y_lim=NULL,
 
-                            invert_y=F) {
+                            invert_y=F,
+main=NULL, sub=NULL) {
 
     message("*** Creating pixgram ***")
 
@@ -112,11 +115,12 @@ pixgram.default <- function(tre_file=NULL,
               xform_type=xform_type,
               show_tree=show_tree,
               raster_width=raster_width,
-              raster_margin=raster_margin)
+              raster_margin=raster_margin,
+              main=main, sub=sub)
 
               # prefix?
-              #	ptid=ptid,
-              #	region=region,
+              #	main=main,
+              #	sub=sub,
 #              strip_columns=NULL, #strip_columns,
 #              palette=NULL)#, #palette, # this is used for tree decoration
     #        verbose=verbose)
@@ -588,7 +592,6 @@ set.master <- function(P) {
     }
     return ( P )
 }
-
 #' @keywords internal
 pixgram.xform <- function(P) {
 
@@ -627,7 +630,7 @@ pixgram.xform <- function(P) {
 
             for (i in 1:ncol(P$aas))
                 # all sites that match the master are '='
-                # gain or loss of "-" should become '%' 
+                # gain or loss of "-" should become '%'
                 # point mutations are "!"
                 P$aa_rast[, i] <- gsub('[a-y]', '!',       # 3: mark intact codons
                     replace(replace(P$aas[ ,i],  # 1: change matches to master
@@ -636,38 +639,55 @@ pixgram.xform <- function(P) {
 # to do: consider other colors for inviable codons
         } else if (P$xform_type == 2) {
 
-            # @:matches(grey) -> =
+            # @:matches(grey) -> = maybe . instead
             # =:deletion(white) -> %
             # original base:mismatches(usual color)
             # $s_first eq $s_curr ? '@' : ( $s_curr eq '-' ? '=' : $s_curr)
 
             for (i in 1:ncol(P$aas))
                 P$aa_rast[, i] <- gsub('-', '%', replace(P$aas[ ,i],
-                    which(P$aas[ ,i] == P$aa_master[i]), '='))
+                    which(P$aas[ ,i] == P$aa_master[i]), '.'))
 
         } else if (P$xform_type == 3) {
 
 #[^RKH]->[RKH]
 #[^ED]->[ED]
 #[^O]->O
-            # @:matches(grey) -> =
-            # =:deletion(white) -> %
-            # original base:mismatches(usual color)
-            # $s_first eq $s_curr ? '@' : ( $s_curr eq '-' ? '=' : $s_curr)
 
-        message("    Please be patient while computing this transformation.")
+#        message("    Please be patient while computing this transformation.")
 
-            for (i in 1:ncol(P$aas))
-                 P$aa_rast[, i] <- sapply(1:nrow(P$aas), function(j)
- 		    ifelse(P$aas[j,i] == P$aa_master[i], '=', # match t/f
- 			ifelse(P$aas[j,i] == 'o', 'o', # gain of png site
- 			    ifelse(P$aas[j,i] %in% c('r','k','h') & 
- 			        !P$aa_master[i] %in% c('r','k','h'), '+',
- 				    ifelse(P$aas[j,i] %in% c('d','e') & 
- 				        !P$aas[i] %in% c('d','e'), '_',
-  				            ifelse(P$aas[j,i] == '-' | 
- 					    P$aa_master[i]=='-', '%','^'))))))
+	misc.aa <- c("!", "#", "$", "z", "x", "+", "_", "-", "%", "=", "o")
+	pos.aas <- c("k", "r", "h")
+	neg.aas <- c("d", "e")
 
+        for (i in 1:ncol(P$aas)) {
+
+            x <- replace(P$aas[, i], 
+		which(P$aas[, i] == P$aa_master[i]), '=')
+
+	    if (!P$aa_master[i] %in% pos.aas)
+		x <- replace(x, which(x %in% pos.aas), "+")
+
+	    if (!P$aa_master[i] %in% neg.aas)
+		x <- replace(x, which(x %in% neg.aas), "_")
+
+	    if (P$aa_master[i] != "-")
+		x <- replace(x, which(x == "-"), "%")
+
+	    P$aa_rast[, i] <- replace(x, which(!x %in% misc.aa), "^")
+
+	}
+
+# this was inefficient:
+#                  P$aa_rast[, i] <- sapply(1:nrow(P$aas), function(j)
+#  		    ifelse(P$aas[j,i] == P$aa_master[i], '=', # match t/f
+#  			ifelse(P$aas[j,i] == 'o', 'o', # gain of png site
+#  			    ifelse(!P$aa_master[i] %in% c('r','k','h') & 
+#                               P$aas[j,i] %in% c('r','k','h'), '+',
+#  				    ifelse(!P$aas[i] %in% c('d','e') &
+#                                       P$aas[j,i] %in% c('d','e'), '_',
+#   				            ifelse(P$aas[j,i] == '-' |
+#  					    P$aa_master[i]=='-', '%','^'))))))
         }
 
 	if (!P$xform_master & master_index) # if master_index == 0 (consensus) don't restore it
@@ -703,10 +723,10 @@ pixgram.xform <- function(P) {
 # annotate hypermutations
 	    for (i in which(P$nt_master[1:(length(P$nt_master)-2)] == 'g'))
                 P$nt_rast[which(P$nts[, i  ] == 'a'
-			     & (P$nts[, i+1] == 'a' | 
+			     & (P$nts[, i+1] == 'a' |
 				P$nts[, i+1] == 'g')
-			     & (P$nts[, i+2] == 'a' | 
-			        P$nts[, i+2] == 'g' | 
+			     & (P$nts[, i+2] == 'a' |
+			        P$nts[, i+2] == 'g' |
 				P$nts[, i+1] == 't') ), i ] = '^'
         } else if (P$xform_type > 1) {
 

@@ -10,7 +10,8 @@
   pheno_matrix = NULL, show_top_axis = F, show_tip_label = F,
   selected_rows = NULL, no_margin = F, plot_margin_points = F,
   vbars = NULL, raster_width = NULL, raster_margin = NULL,
-  color_lut_type = NULL, annotate_env = F, ...)
+  color_lut_type = NULL, notes = NULL, annotate_env = F,
+  show_tree = NULL, main = NULL, sub = NULL, ...)
 }
 \arguments{
 \item{x}{pixgram object to be plotted}
@@ -21,7 +22,7 @@
 
 \item{leaf_colors}{vector of tree leaf colors; can be colors or integers}
 
-\item{tip_labels}{vector of tree tip labels}
+\item{tip_labels}{List for adding tree tip labels; see details.}
 
 \item{legend_attributes}{Named list of entries that go into the legend}
 
@@ -51,7 +52,17 @@
 
 \item{color_lut_type}{Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.}
 
+\item{notes}{Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.}
+
 \item{annotate_env}{If true, draw Env landmarks.}
+
+\item{show_tree}{Show the tree? If not, only show the pixel plot.}
+
+\item{main}{Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixgram output.}
+
+\item{sub}{Plot subtitle, i.e. region sequenced.  If specified, it appears with "site" below the pixel plot.}
+
+\item{...}{dots, passed to ape::plot.phylo()}
 }
 \description{
 This layout-compatible method validates the pixgram object, establishes plot coordinates, and draws the pixel and phylogram plots.
@@ -59,7 +70,7 @@ This layout-compatible method validates the pixgram object, establishes plot coo
 \details{
 The x-axis of the plot coordinate system is positive for the tree-plotting region, and negative for the pixel-plotting region.  Setting \code{raster_width} rescales the minimum x-axis value by this factor.  The default is 1, so the pixel and raster plots are equal width.  The \code{raster_margin} parameter rescales the right (least negative) edge of the pixel plot, to leave a gap between pixel and tree, e.g. to include a heatmap of phyenotypic assay results.
 
-The tree can be decorated by passing \code{leaf_colors}, \code{tip_labels}, \code{edge_widths}, and \code{edge_colors}.  See the last vignette example.
+Tree tip labels can be added by passing a list called \code{tip_labels}, with elements named "pch", "bgs", and "col".  See vignette.  The tree can be further decorated by passing \code{leaf_colors}, \code{edge_widths}, and \code{edge_colors}.  See the last vignette example.
 
 If defined, data in the \code{pheno_matrix} are plotted in the margin between tree and pixel plots.  Entry values should be positive (non-zero) integers, which are interpreted as indices to \code{palette()}, color names, or color values.  Matrix rows must have names that match tree tip-label (i.e. \code{pg$tre$tip.label}  strings, or they will not be plotted.  This is to facilitate their proper ordering, which follows that of the leaves on the tree.  All columns are plotted, and in the order given.  However, column widths are scaled to fit together into the marginal area provided within the pixel-plot area (x-values < 0) by \code{raster_margin}.
 
