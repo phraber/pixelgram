@@ -7,11 +7,12 @@
 \method{plot}{pixgram}(x, xform_type = NULL, xform_master = NULL,
   leaf_colors = NULL, tip_labels = NULL, legend_attributes = NULL,
   edge_widths = NULL, edge_colors = NULL, scale_bar = NULL,
-  pheno_matrix = NULL, show_top_axis = F, show_tip_label = F,
-  selected_rows = NULL, no_margin = F, plot_margin_points = F,
-  vbars = NULL, raster_width = NULL, raster_margin = NULL,
-  color_lut_type = NULL, notes = NULL, annotate_env = F,
-  show_tree = NULL, main = NULL, sub = NULL, ...)
+  pheno_matrix = NULL, pheno_letters = NULL, show_top_axis = F,
+  show_tip_label = F, selected_rows = NULL, selected_row_colors = NULL,
+  no_margin = F, plot_margin_points = F, vbars = NULL,
+  raster_width = NULL, raster_margin = NULL, color_lut_type = NULL,
+  notes = NULL, annotate_env = F, show_tree = NULL, main = NULL,
+  sub = NULL, ...)
 }
 \arguments{
 \item{x}{pixgram object to be plotted}
@@ -38,7 +39,9 @@
 
 \item{show_tip_label}{Show taxon labels on tree tips?}
 
-\item{selected_rows}{Vector of selected taxa}
+\item{selected_rows}{Vector of selected taxa.}
+
+\item{selected_row_colors}{Colors to depict vector of selected taxa.}
 
 \item{no_margin}{No margin?  This is passed to \code{ape::plot.phylo()}.}
 
