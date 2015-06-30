@@ -24,7 +24,8 @@
 #' @param edge_widths tree edge widths
 #' @param edge_colors tree edge colors
 #' @param scale_bar Named list of entries used to draw the scale bar
-#' @param pheno_matrix heatmap to draw in raster_margin
+#' @param pheno_matrix Heatmap of RGB values to draw in raster_margin.
+#' @param pheno_letters A vector of letters to label pheno_matrix.
 #' @param show_top_axis Draw axis along top of plot?
 #' @param show_tip_label Show taxon labels on tree tips?
 #' @param selected_rows Vector of selected taxa.

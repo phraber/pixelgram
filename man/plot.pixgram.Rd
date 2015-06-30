@@ -33,7 +33,9 @@
 
 \item{scale_bar}{Named list of entries used to draw the scale bar}
 
-\item{pheno_matrix}{heatmap to draw in raster_margin}
+\item{pheno_matrix}{Heatmap of RGB values to draw in raster_margin.}
+
+\item{pheno_letters}{A vector of letters to label pheno_matrix.}
 
 \item{show_top_axis}{Draw axis along top of plot?}
 
