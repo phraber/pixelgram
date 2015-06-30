@@ -27,7 +27,8 @@
 #' @param pheno_matrix heatmap to draw in raster_margin
 #' @param show_top_axis Draw axis along top of plot?
 #' @param show_tip_label Show taxon labels on tree tips?
-#' @param selected_rows Vector of selected taxa
+#' @param selected_rows Vector of selected taxa.
+#' @param selected_row_colors Colors to depict vector of selected taxa.
 #' @param no_margin No margin?  This is passed to \code{ape::plot.phylo()}.
 #' @param tip_labels List for adding tree tip labels; see details.
 #' @param plot_margin_points Plot margin points?
@@ -58,9 +59,11 @@ plot.pixgram <- function(x,
     edge_colors=NULL,
     scale_bar=NULL,
     pheno_matrix=NULL,
+    pheno_letters=NULL,
     show_top_axis=F,
     show_tip_label=F,
     selected_rows=NULL,
+    selected_row_colors=NULL,
     no_margin=F,
     plot_margin_points=F,
     vbars=NULL,
@@ -132,6 +135,8 @@ plot.pixgram <- function(x,
     if (!is.null(show_tree)) R$show_tree = show_tree
     if (!is.null(main)) R$main = main
     if (!is.null(sub)) R$sub = sub
+    if (!is.null(selected_rows) & is.null(selected_row_colors))
+        selected_row_colors = rep("#66666666", length(selected_rows))
 
       R <- pixgram.tree.plot(R,
                              leaf_colors=leaf_colors,
@@ -141,9 +146,11 @@ plot.pixgram <- function(x,
                              edge_colors=edge_colors,
                              no_margin=no_margin,
                              pheno_matrix=pheno_matrix,
+			     pheno_letters=pheno_letters,
                              plot_margin_points=plot_margin_points,
                              show_tip_label=show_tip_label,
                              selected_rows=selected_rows,
+                             selected_row_colors=selected_row_colors,
                              scale_bar=scale_bar,
                              ...)#, hbars=hbars)
 
@@ -316,9 +323,11 @@ pixgram.tree.plot <- function(x,
     legend_attributes=legend_attributes,
     no_margin=no_margin,
     pheno_matrix=pheno_matrix,
+pheno_letters=pheno_letters,
     plot_margin_points=plot_margin_points,
     show_tip_label=show_tip_label,
     selected_rows=selected_rows,
+    selected_row_colors=selected_row_colors,
     scale_bar=scale_bar,
     ...) {
 
@@ -388,7 +397,7 @@ pixgram.tree.plot <- function(x,
 	    selected_rows[i]+1/2,
             R$x_lim[2],
 	    selected_rows[i]-1/2,
-	    border=NA, col=6)
+	    border=selected_row_colors[i], col=NA)
 
     } else {
 # the default is not to invert
@@ -403,7 +412,7 @@ pixgram.tree.plot <- function(x,
 		length(R$tre$tip.label)-selected_rows[i]/x_factor + 1/2,
 		R$x_lim[2],
 		length(R$tre$tip.label)-selected_rows[i]/x_factor - 1/2,
-		border=NA, col=6)
+		border=selected_row_colors[i], col=NA)
 	} else {
 #       R$y_lim <- c(length(R$tre$tip.label), 1)
 	  for (i in 1:length(selected_rows))
@@ -411,7 +420,7 @@ pixgram.tree.plot <- function(x,
 		length(R$tre$tip.label)-selected_rows[i]+1/2,
 		R$x_lim[2],
 		length(R$tre$tip.label)-selected_rows[i]+3/2,
-		border=NA, col=6)
+		border=selected_row_colors[i], col=NA)
 	}
     }
   }
@@ -431,7 +440,7 @@ pixgram.tree.plot <- function(x,
                                 plot=R$show_tree,
 				edge.width=edge_widths,
                                 edge.color=edge_colors,
-#                                tip.color=tip_labels$col, # NOTE THIS IS NOT ROBUST! assumes tree order is unchanged
+                                tip.color=tip_labels$col, # NOTE THIS IS NOT ROBUST! assumes tree order is unchanged
                                 show.tip.label=show_tip_label, ...) #
 
     R$tre$tip.label = safe.tiplabels
@@ -516,7 +525,18 @@ pixgram.tree.plot <- function(x,
 ##		    col=pheno_matrix[myordering[c(length(R$tre$tip.label):1)], col_num],
 #			border=NA)
 #		}
-#    mtext(letters[col_num], 1, at=myxpos, line=-1/3, cex=cexS, adj=0.5, padj=1/2)
+
+if (!is.null(pheno_letters)) {
+    myxpos = mean(c(L_pos, R_pos))
+
+    usr=par('usr')
+    ypos.1 <- usr[4] - (usr[4] - usr[3])*0.97
+    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.96
+
+    text(myxpos, 470, pheno_letters[col_num], cex=9/20, adj=c(1/2, 0))
+    text(myxpos, ypos.2, pheno_letters[col_num], cex=1/3, adj=c(1/2, 1))
+
+}
 	    }
 	} else {
 
