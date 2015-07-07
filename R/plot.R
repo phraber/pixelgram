@@ -324,7 +324,7 @@ pixgram.tree.plot <- function(x,
     legend_attributes=legend_attributes,
     no_margin=no_margin,
     pheno_matrix=pheno_matrix,
-pheno_letters=pheno_letters,
+    pheno_letters=pheno_letters,
     plot_margin_points=plot_margin_points,
     show_tip_label=show_tip_label,
     selected_rows=selected_rows,
@@ -395,10 +395,10 @@ pheno_letters=pheno_letters,
 
 	for (i in 1:length(selected_rows))
 	  rect(R$x_lim[1],
-	    selected_rows[i]+1/2,
+	    selected_rows[i]+1/4,
             R$x_lim[2],
-	    selected_rows[i]-1/2,
-	    border=selected_row_colors[i], col=NA)
+	    selected_rows[i]-1/4,
+	    border=selected_row_colors[i], col=NA, lwd=1/2)
 
     } else {
 # the default is not to invert
@@ -410,18 +410,18 @@ pheno_letters=pheno_letters,
 
 	  for (i in 1:length(selected_rows))
 	    rect(R$x_lim[1],
-		length(R$tre$tip.label)-selected_rows[i]/x_factor + 1/2,
+		length(R$tre$tip.label)-selected_rows[i]/x_factor + 1/4,
 		R$x_lim[2],
-		length(R$tre$tip.label)-selected_rows[i]/x_factor - 1/2,
-		border=selected_row_colors[i], col=NA)
+		length(R$tre$tip.label)-selected_rows[i]/x_factor - 1/4,
+		border=selected_row_colors[i], col=NA, lwd=1/2)
 	} else {
 #       R$y_lim <- c(length(R$tre$tip.label), 1)
 	  for (i in 1:length(selected_rows))
 	    rect(R$x_lim[1],
-		length(R$tre$tip.label)-selected_rows[i]+1/2,
+		length(R$tre$tip.label)-selected_rows[i]+3/4,
 		R$x_lim[2],
-		length(R$tre$tip.label)-selected_rows[i]+3/2,
-		border=selected_row_colors[i], col=NA)
+		length(R$tre$tip.label)-selected_rows[i]+5/4,
+		border=selected_row_colors[i], col=NA, lwd=1/4)
 	}
     }
   }
@@ -509,9 +509,9 @@ pheno_letters=pheno_letters,
 		myordering <- R$tre$edge[which(R$tre$edge[, 2] <= length(R$tre$tip.label)), 2]
 
 		rect(rep(L_pos, length(R$tre$tip.label)),
-			c(length(R$tre$tip.label):1)-1/2,
+			c(length(R$tre$tip.label):1)-1/4,
 			rep(R_pos, length(R$tre$tip.label)),
-			c(length(R$tre$tip.label):1)+1/2,
+			c(length(R$tre$tip.label):1)+1/4,
 #			col=pheno_matrix[, col_num],
 		    col=pheno_matrix[myordering[c(length(R$tre$tip.label):1)], col_num],
 			border=NA)
@@ -532,11 +532,10 @@ if (!is.null(pheno_letters)) {
 
     usr=par('usr')
     ypos.1 <- usr[4] - (usr[4] - usr[3])*0.97
-    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.96
+    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
 
-    text(myxpos, 470, pheno_letters[col_num], cex=9/20, adj=c(1/2, 0))
+    text(myxpos, 470, pheno_letters[col_num], cex=1/3, adj=c(1/2, 0))
     text(myxpos, ypos.2, pheno_letters[col_num], cex=1/3, adj=c(1/2, 1))
-
 }
 	    }
 	} else {

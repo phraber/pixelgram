@@ -442,18 +442,19 @@ pixgram.validate <- function(P) {
     # verify one-to-one mapping of tree tip.labels onto aas
     if (!is.null(P$aas)) {
 
-        if (length(P$tre$tip.label) != nrow(P$aas))
-            cat(paste(
-                "pixgram WARNING: Number of sequences differs between tree and aa alignment: tree has",
-                length(P$tre$tip.label), "leaves vs.",
-                nrow(P$aas), "aligned aas\n"))
+        if (!is.null(P$tre)) {
+            if (length(P$tre$tip.label) != nrow(P$aas))
+                warning("Number of sequences differs between tree and aa alignment: tree has",
+                    length(P$tre$tip.label), "leaves vs.",
+                    nrow(P$aas), "aligned aas\n")
 
-        if (length(which(!rownames(P$aas) %in% P$tre$tip.label) > 0))
+            if (length(which(!rownames(P$aas) %in% P$tre$tip.label) > 0))
                 stop(paste(
                     "pixgram ERROR: Tree lacks sequences found in AA alignment:",
                     paste(rownames(P$aas)[which(!rownames(P$aas) %in% P$tre$tip.label)],
 		    collapse=" ")))
 
+        }
     }
 
     message("*** Validated OK ***")
