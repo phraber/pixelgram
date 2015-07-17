@@ -25,6 +25,7 @@
 #' @param edge_colors tree edge colors
 #' @param scale_bar Named list of entries used to draw the scale bar
 #' @param pheno_matrix Heatmap of RGB values to draw in raster_margin.
+#' @param pheno_colnames A vector of names to label pheno_matrix.
 #' @param pheno_letters A vector of letters to label pheno_matrix.
 #' @param show_top_axis Draw axis along top of plot?
 #' @param show_tip_label Show taxon labels on tree tips?
@@ -60,6 +61,7 @@ plot.pixgram <- function(x,
     edge_colors=NULL,
     scale_bar=NULL,
     pheno_matrix=NULL,
+    pheno_colnames=NULL,
     pheno_letters=NULL,
     show_top_axis=F,
     show_tip_label=F,
@@ -147,6 +149,7 @@ plot.pixgram <- function(x,
                              edge_colors=edge_colors,
                              no_margin=no_margin,
                              pheno_matrix=pheno_matrix,
+			     pheno_colnames=pheno_colnames,
 			     pheno_letters=pheno_letters,
                              plot_margin_points=plot_margin_points,
                              show_tip_label=show_tip_label,
@@ -230,7 +233,21 @@ color.node <- function(edge_colors, this_tree, node) {
     edge_colors
 }
 
-#' @keywords internal
+#' Recursively propagate tip colors internally to color interior branches
+#'
+#' Branches with descendents that have different colors will be represented with the default color.
+#'
+#' NB: the default color is currently hard-coded, which seems unwise.
+#' Some trees may not be amenable to the recursion scheme used here.
+#' Alternatively, starting to label on the root node may be a bad idea.
+#' On tree was reported to have caused a problem, so it is worth keeping in mind.
+#'
+#' @param T ape::phylo() tree object.
+#' @param tip_colors vector of colors, whether rgb hex or integers, whose order matches the names in the tree tip.label slot.
+#' 
+#' @return A vector of colors of length equal to the number of tree branches.
+#'
+#' @export
 color.edges <- function(T, tip_colors) {
 
     default.color = ifelse(is.numeric(tip_colors), 1, "#444444")
@@ -324,6 +341,7 @@ pixgram.tree.plot <- function(x,
     legend_attributes=legend_attributes,
     no_margin=no_margin,
     pheno_matrix=pheno_matrix,
+    pheno_colnames=pheno_colnames,
     pheno_letters=pheno_letters,
     plot_margin_points=plot_margin_points,
     show_tip_label=show_tip_label,
@@ -527,17 +545,30 @@ pixgram.tree.plot <- function(x,
 #			border=NA)
 #		}
 
-if (!is.null(pheno_letters)) {
-    myxpos = mean(c(L_pos, R_pos))
+		if (!is.null(pheno_colnames)) {
 
-    usr=par('usr')
-    ypos.1 <- usr[4] - (usr[4] - usr[3])*0.97
-    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
+		    myxpos = mean(c(L_pos, R_pos))
 
-    text(myxpos, 470, pheno_letters[col_num], cex=1/3, adj=c(1/2, 0))
-    text(myxpos, ypos.2, pheno_letters[col_num], cex=1/3, adj=c(1/2, 1))
-}
+		    usr=par('usr')
+		    ypos.1 <- usr[3] + (usr[4] - usr[3])*0.03
+		    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
+
+		    text(myxpos, ypos.1, pheno_colnames[col_num], cex=1/2, adj=c(1, 1/2), srt=90)
+		    text(myxpos, ypos.2, pheno_colnames[col_num], cex=1/2, adj=c(0, 1/2), srt=90)
+		}
+
+		if (!is.null(pheno_letters)) {
+		    myxpos = mean(c(L_pos, R_pos))
+
+		    usr=par('usr')
+		    ypos.1 <- usr[3] + (usr[4] - usr[3])*0.03
+		    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
+
+		    text(myxpos, ypos.1, pheno_letters[col_num], cex=1/3, adj=c(1/2, 0))
+		    text(myxpos, ypos.2, pheno_letters[col_num], cex=1/3, adj=c(1/2, 1))
+		}
 	    }
+
 	} else {
 
 	    if (plot_margin_points) {
@@ -715,25 +746,6 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
  		rect(x_1, y_lim[1], x_2, y_lim[2], border=NA, col=clr)
  	}
 
-#         # gp120/gp41 boundary
-# 	x_pos = NULL
-# 	x_pos <- mean(refseq_lut$aln[min(which(refseq_lut$l==511))],
-# 	    refseq_lut$aln[max(which(refseq_lut$r==512))])
-
-# 	if (!is.null(x_pos) & !is.na(x_pos))
-# 	    segments(x_pos, y_lim[1], x_pos, y_lim[2], col=clr, lwd=1/2)
-
-#         # signal peptide
-# 	x_pos = NULL
-# 	x_pos <- mean(refseq_lut$aln[which(refseq_lut$l==30&refseq_lut$r==30)],
-# 	              refseq_lut$aln[which(refseq_lut$l==31&refseq_lut$r==31)])
-
-# 	if (!is.null(x_pos) & !is.na(x_pos))
-# 	    segments(x_pos, y_lim[1], x_pos, y_lim[2], col=clr, lwd=1/2)
-
-#	if (!is.null(x_pos) & !is.na(x_pos))
-#	    abline(v=x_pos, col=5, lwd=1, lty=3)
-
         ### annotate text at top of plot here so we don't draw boxes over text
  	if (!is.null(notes$txt)) {
 
@@ -749,14 +761,17 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 
                 #  consider inverted y-axis values
 		y.pos <- ifelse(usr[3] < usr[4],
-		    usr[4] - (usr[4] - usr[3])*0.995,
-		    usr[3] - (usr[3] - usr[4])*0.995)
+		    usr[4],# - (usr[4] - usr[3])*0.995,
+		    usr[3])# - (usr[4] - usr[3])*0.995)
 
 		n_s <- ifelse(usr[3] < usr[4], 3, 1) # north or south?
-
+#		n_s <- ifelse(usr[3] < usr[4], 3, 1) # north or south?
+		my.adj=ifelse(usr[3] < usr[4], 1, 0)
  		if (!is.null(l.xpos) & !is.null(r.xpos) &
 		      !is.na(l.xpos) & !is.na(r.xpos))
- 		    text(mean(c(l.xpos, r.xpos)), y.pos, notes$txt[i], pos=n_s,
+ 		    mtext(notes$txt[i], 3, #pos=n_s,
+			at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos, 
+#			adj=c(1/2, my.adj), 
 			cex=2/3)
 
  	    }
@@ -836,14 +851,13 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 
          my_slope = (ncol(R$aas)-1)/(axis_xlim[2]-axis_xlim[1])
 
-
-     tick_interval = ifelse(ncol(R$aas) >= 3000, 1000,
- 	ifelse(ncol(R$aas) >= 300, 100,
- 	    ifelse(ncol(R$aas) >= 200, 50,
- 		ifelse(ncol(R$aas) >= 150, 30,
- 		    ifelse(ncol(R$aas) >= 80, 20,
- 			ifelse(ncol(R$aas) >= 40, 10,
- 			    ifelse(ncol(R$aas) >= 20, 5, 1)))))))
+	 tick_interval = ifelse(ncol(R$aas) >= 3000, 1000,
+ 	     ifelse(ncol(R$aas) >= 300, 100,
+ 		 ifelse(ncol(R$aas) >= 200, 50,
+ 		     ifelse(ncol(R$aas) >= 150, 30,
+ 			 ifelse(ncol(R$aas) >= 80, 20,
+ 			     ifelse(ncol(R$aas) >= 40, 10,
+ 				 ifelse(ncol(R$aas) >= 20, 5, 1)))))))
 
  	x_locs <- R$refseq_lut$aln[which(R$refseq_lut$aln < ncol(R$aas) &
  	    R$refseq_lut$l == R$refseq_lut$r & R$refseq_lut$l %% tick_interval == 0)]
@@ -864,33 +878,42 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 #pos) the margin.
 
  	my_mgp=c(2/3, 0/5, 0)
- 	if (length(x_locs) == length(x_labs)) {
 
-# 	message(paste("* xlabs=", paste(x_labs, collapse=" ")))
-# 	message(paste("* xlocs=", paste(x_locs, collapse=" ")))
-# 	message(paste("* ylims=", paste(R$y_lim, collapse=" ")))
+	usr=par('usr')
+#	my.tcl = ifelse(usr[3]<usr[4], (usr[4]-usr[3])/500, (usr[3]-usr[4])/500)
 
-#        axis(1, at=c(axis_xlim[1], x_locs, axis_xlim[2]), labels=c("", x_labs, ""),
-         axis(1, at=x_locs, labels=x_labs,
+ 	if (length(x_locs) <= length(x_labs)) {
+
+            axis(1, at=x_locs[1:length(x_labs)], labels=x_labs,
  		xaxt='s', cex.lab=my_cexl, cex.axis=my_cexa, mgp=my_mgp,
 #		pos=1/2,
  		pos=ifelse(R$invert_y==T, R$y_lim[1]-1/2, R$y_lim[1]+1/2),
  		padj=0/2,
  #		hadj=0/2,
- 		lwd=1/2,
- 		tck=-1/nrow(R$aas))
+ 		lwd=1/2)#,
+# 		tcl=-my.tcl)#k=-0.5/nrow(R$aas))
 
  	my_mgp=c(2/3, 0/5, 0)
 #        axis(3, at=c(axis_xlim[1], x_locs, axis_xlim[2]), labels=c("", x_labs, ""),
- 	if (R$invert_y == F & show_top_axis)
-             axis(3, at=x_locs, labels=x_labs,
- 		xaxt='s', cex.lab=my_cexl, cex.axis=my_cexa, mgp=my_mgp,
- 		pos=1/2, padj=0, lwd=1/2, tck=-1/nrow(R$aas))
+ 	if (show_top_axis) {
+
+            axis(3, at=x_locs[1:length(x_labs)], 
+		labels=x_labs,
+ 		xaxt='s',
+		cex.lab=my_cexl, 
+		cex.axis=my_cexa, 
+		mgp=my_mgp,
+ 		pos=ifelse(R$invert_y, R$y_lim[2]+1/2, R$y_lim[2]-1/2),
+ 		padj=ifelse(R$invert_y, 2/2, 0/2), 
+		lwd=1/2)#, 
+#		tcl=-my.tcl)#k=-0.5/nrow(R$aas))
+
  	} else {
  	    message(paste("* NO xlabs=", paste(x_labs, collapse=" ")))
  	    message(paste("* NO xlocs=", paste(x_locs, collapse=" ")))
  	}
-     }
+      }
+    }
 
     if (!is.null(R$main))
       mtext(paste0(R$main, " "), 3, at=0, line=0, cex=1, outer=F, adj=1)

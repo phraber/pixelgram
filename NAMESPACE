@@ -3,6 +3,7 @@
 S3method(plot,pixgram)
 S3method(print,pixgram)
 S3method(summary,pixgram)
+export(color.edges)
 export(create.timepoint.parser)
 export(parse.timepoints)
 export(pixgram)

@@ -428,9 +428,9 @@ pixgram.validate <- function(P) {
 
         if (length(P$tre$tip.label) != nrow(P$nts))
             cat(paste(
-                "pixgram WARNING: Number of sequences differs between tree and nt alignment: tree has",
-                length(P$tre$tip.label), "leaves vs.",
-                nrow(P$nts), "aligned nts\n"))
+                "pixgram WARNING: Number of sequences differs between tree and nt alignment: tree has ",
+                length(P$tre$tip.label), " leaves vs. ",
+                nrow(P$nts), " aligned nts.\n"))
 
         if (length(which(!rownames(P$nts) %in% P$tre$tip.label) > 0))
                 stop(paste(
@@ -444,9 +444,9 @@ pixgram.validate <- function(P) {
 
         if (!is.null(P$tre)) {
             if (length(P$tre$tip.label) != nrow(P$aas))
-                warning("Number of sequences differs between tree and aa alignment: tree has",
-                    length(P$tre$tip.label), "leaves vs.",
-                    nrow(P$aas), "aligned aas\n")
+                warning("Number of sequences differs between tree and aa alignment: tree has ",
+                    length(P$tre$tip.label), " leaves vs. ",
+                    nrow(P$aas), " aligned aas.\n")
 
             if (length(which(!rownames(P$aas) %in% P$tre$tip.label) > 0))
                 stop(paste(

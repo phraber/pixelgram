@@ -7,12 +7,12 @@
 \method{plot}{pixgram}(x, xform_type = NULL, xform_master = NULL,
   leaf_colors = NULL, tip_labels = NULL, legend_attributes = NULL,
   edge_widths = NULL, edge_colors = NULL, scale_bar = NULL,
-  pheno_matrix = NULL, pheno_letters = NULL, show_top_axis = F,
-  show_tip_label = F, selected_rows = NULL, selected_row_colors = NULL,
-  no_margin = F, plot_margin_points = F, vbars = NULL,
-  raster_width = NULL, raster_margin = NULL, color_lut_type = NULL,
-  notes = NULL, annotate_env = F, show_tree = NULL, main = NULL,
-  sub = NULL, ...)
+  pheno_matrix = NULL, pheno_colnames = NULL, pheno_letters = NULL,
+  show_top_axis = F, show_tip_label = F, selected_rows = NULL,
+  selected_row_colors = NULL, no_margin = F, plot_margin_points = F,
+  vbars = NULL, raster_width = NULL, raster_margin = NULL,
+  color_lut_type = NULL, notes = NULL, annotate_env = F,
+  show_tree = NULL, main = NULL, sub = NULL, ...)
 }
 \arguments{
 \item{x}{pixgram object to be plotted}
@@ -34,6 +34,8 @@
 \item{scale_bar}{Named list of entries used to draw the scale bar}
 
 \item{pheno_matrix}{Heatmap of RGB values to draw in raster_margin.}
+
+\item{pheno_colnames}{A vector of names to label pheno_matrix.}
 
 \item{pheno_letters}{A vector of letters to label pheno_matrix.}
 
