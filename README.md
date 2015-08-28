@@ -6,6 +6,7 @@ This package will plot a nucleotide and/or protein sequence alignment together w
 
 ####Quick Start
 Any R user can install this package with just a few lines lines of code:
+
 1. Start R, by whatever method you choose.
 1. Type "install.packages('devtools')"
 1. If prompted to compile a required package from source, you can safely decline without ill effects.
