@@ -12,6 +12,5 @@ LazyData: true
 Imports: seqinr,
     ape
 Suggests: knitr,
-    testthat,
     devtools
 VignetteBuilder: knitr
