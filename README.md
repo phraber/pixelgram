@@ -6,11 +6,15 @@ This package will plot a nucleotide and/or protein sequence alignment together w
 
 ####Quick Start
 Any R user can install this package with just a few lines lines of code:
+1. Start R, by whatever method you choose.
+1. Type "install.packages('devtools')"
+1. If prompted to compile a required package from source, you can safely decline without ill effects.
+1. Type "devtools::install_github('phraber/pixgram')".
+1. Type "vignette('pixgramr')"
 
-  install.packages("devtools")
+If you cannot view the vignette, please see this PDF file for examples - https://github.com/phraber/pixgram/blob/master/examples.pdf
 
-  devtools::install_github("phraber/pixgram")
-
-  vignette("pixgramr")
-
-If you cannot see the vignette, please see this PDF file for examples - https://github.com/phraber/pixgram/blob/master/examples.pdf
+#### To list all functions provided in this package:
+1. Start R, by whatever method you choose.
+1. Type "library(pixgramr)".
+1. Type "ls('package:pixgram')".
