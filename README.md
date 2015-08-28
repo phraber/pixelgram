@@ -11,6 +11,6 @@ Any R user can install this package with just a few lines lines of code:
 
   devtools::install_github("phraber/pixgram")
 
-  library(pixgramr)
+  vignette("pixgramr")
 
-For some examples, see the vignette (which may require building it) or this pdf -  https://github.com/phraber/pixgram/blob/master/examples.pdf
+If you cannot see the vignette, please see this PDF file for examples - https://github.com/phraber/pixgram/blob/master/examples.pdf
