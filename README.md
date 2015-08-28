@@ -14,5 +14,4 @@ Any R user can install this package with just a few lines lines of code:
 
 If you cannot view the vignette, please see this PDF file for examples - https://github.com/phraber/pixgram/blob/master/examples.pdf
 
-##### To list all functions provided in this package, type 
-"library(help=pixgramr)" from within R.
+##### To list all functions and data provided by this package, type "library(help=pixgramr)" from within R.
