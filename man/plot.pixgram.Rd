@@ -87,7 +87,7 @@ The option \code{color_lut_type} is used to specify alternative columns from the
 
 Entries in the \code{scale_bar} list argument should be named \code{'pos'} for plot-position coordinates, \code{'lwd'}, \code{'len'} for bar length, in terms of the plot coordinates, \code{'cex'}, and \code{'text'}.
 
-Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pchs'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwds'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'cols'} for colors, \code{'title'}, and \code{'text'}.
+Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pch'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwd'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'col'} for colors, \code{'title'}, and \code{'text'}.
 }
 \examples{
 \dontrun{
