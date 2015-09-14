@@ -14,7 +14,7 @@
 #'
 #' Entries in the \code{scale_bar} list argument should be named \code{'pos'} for plot-position coordinates, \code{'lwd'}, \code{'len'} for bar length, in terms of the plot coordinates, \code{'cex'}, and \code{'text'}.
 #'
-#' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pchs'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwds'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'cols'} for colors, \code{'title'}, and \code{'text'}.
+#' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pch'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwd'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'col'} for colors, \code{'title'}, and \code{'text'}.
 #'
 #' @param x pixgram object to be plotted
 #' @param xform_type see \code{help(pixgramr::pixgram())}.
@@ -177,7 +177,7 @@ plot.pixgram <- function(x,
 # to do: add axis options or ...
 
 # the second condition/s implicitly assume env with hxb2 present
-    if ((!is.null(notes) & is.list(notes)) | 
+    if ((!is.null(notes) & is.list(notes)) |
 	(annotate_env & !is.null(R$refseq_lut)))
  	    annotate.region(R, notes=notes,
  	        y_lim=c(R$y_lim[1] + ifelse(R$invert_y, -1/2, 1/2),
@@ -244,7 +244,7 @@ color.node <- function(edge_colors, this_tree, node) {
 #'
 #' @param T ape::phylo() tree object.
 #' @param tip_colors vector of colors, whether rgb hex or integers, whose order matches the names in the tree tip.label slot.
-#' 
+#'
 #' @return A vector of colors of length equal to the number of tree branches.
 #'
 #' @export
@@ -268,67 +268,67 @@ add.legend <- function(L) {
     if (!is.null(L$text)) {
 
         if (is.null(L$location)) L$location='topright'
-	if (is.null(L$bty)) L$bty = 'n'
-#	if (is.null(L$bg)) L$bg = 'white'
-	if (is.null(L$pt.bg)) L$pt.bg = 'white'
-	if (is.null(L$box_col)) L$box_col = NA
-	if (is.null(L$cex)) L$cex = 1
+        if (is.null(L$bty)) L$bty = 'n'
+        #	if (is.null(L$bg)) L$bg = 'white'
+        if (is.null(L$pt.bg)) L$pt.bg = 'white'
+        if (is.null(L$box.col)) L$box.col = NA
+        if (is.null(L$cex)) L$cex = 1
 
         if (length(L$location) == 2) {
 
-	    if (is.null(L$lwds)) {
+            if (is.null(L$lwd)) {
 
-		legend(L$location[1], L$location[2],
-		    L$text, col=L$cols, cex=L$cex,
-		    pch=L$pchs, bty=L$bty, bg=L$bg,
-		    pt.bg=L$pt.bg,
-		    box.col=L$box_col,
-		    title=L$title, pt.cex=L$pt.cex)
+                legend(L$location[1], L$location[2],
+                       L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, bty=L$bty, bg=L$bg,
+                       pt.bg=L$pt.bg,
+                       box.col=L$box_col,
+                       title=L$title, pt.cex=L$pt.cex)
 
-	    } else if (is.null(L$pchs)) {
+            } else if (is.null(L$pch)) {
 
-		legend(L$location[1], L$location[2],
-		    L$text, col=L$cols, cex=L$cex,
-                    lwd=L$lwds, bty=L$bty, bg=L$bg,
-		    box.col=L$box_col,
-		    pt.bg=L$pt.bg,
-		    title=L$title, pt.cex=L$pt.cex)
-	    } else {
+                legend(L$location[1], L$location[2],
+                       L$text, col=L$col, cex=L$cex,
+                       lwd=L$lwd, bty=L$bty, bg=L$bg,
+                       box.col=L$box.col,
+                       pt.bg=L$pt.bg,
+                       title=L$title, pt.cex=L$pt.cex)
+            } else {
 
-		legend(L$location[1], L$location[2],
-		   L$text, col=L$cols, cex=L$cex,
-                   pch=L$pchs, lwd=L$lwds, bty=L$bty, bg=L$bg,
-		   pt.bg=L$pt.bg,
-		   box.col=L$box_col, title=L$title,
-		   pt.cex=L$pt.cex,
-		   merge=T)
-	    }
+                legend(L$location[1], L$location[2],
+                       L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, lwd=L$lwd, bty=L$bty, bg=L$bg,
+                       pt.bg=L$pt.bg,
+                       box.col=L$box.col, title=L$title,
+                       pt.cex=L$pt.cex,
+                       merge=T)
+            }
 
-	} else { # assume location is a character string?
+        } else { # assume location is a character string?
 
-	    if (is.null(L$lwds)) {
+            if (is.null(L$lwd)) {
 
-		legend(as.character(L$location), L$text, col=L$cols, cex=L$cex,
-                    pch=L$pchs, bty=L$bty, bg=L$bg,
-		    box.col=L$box_col,
-		    title=L$title,
-		    pt.bg=L$pt.bg,
-		    pt.cex=L$pt.cex)
-	    } else if (is.null(L$pchs)) {
+                legend(as.character(L$location), L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, bty=L$bty, bg=L$bg,
+                       box.col=L$box.col,
+                       title=L$title,
+                       pt.bg=L$pt.bg,
+                       pt.cex=L$pt.cex)
+            } else if (is.null(L$pch)) {
 
-		legend(as.character(L$location), L$text, col=L$cols, cex=L$cex,
-                   lwd=L$lwds, bty=L$bty, bg=L$bg, box.col=L$box_col,
-		   title=L$title, pt.cex=L$pt.cex)
-	    } else {
+                legend(as.character(L$location), L$text, col=L$col, cex=L$cex,
+                       lwd=L$lwd, bty=L$bty, bg=L$bg, box.col=L$box.col,
+                       title=L$title, pt.cex=L$pt.cex)
+            } else {
 
-		legend(as.character(L$location), L$text, col=L$cols, cex=L$cex,
-                   pch=L$pchs, lwd=L$lwds, bty=L$bty, bg=L$bg,
-		   pt.bg=L$pt.bg,
-		   box.col=L$box_col, title=L$title,
-		   pt.cex=L$pt.cex,
-		   merge=T)
-	    }
-	}
+                legend(as.character(L$location), L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, lwd=L$lwd, bty=L$bty, bg=L$bg,
+                       pt.bg=L$pt.bg,
+                       box.col=L$box.col, title=L$title,
+                       pt.cex=L$pt.cex,
+                       merge=T)
+            }
+        }
     }
 }
 
@@ -589,7 +589,7 @@ pixgram.tree.plot <- function(x,
 
 			for (i in 1:length(R$tre$tip.label))
 		            points(-0.01 * R$raster_width * R$x_lim[2], i,
-				col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], 
+				col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i],
 				cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
 		    }
@@ -770,8 +770,8 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
  		if (!is.null(l.xpos) & !is.null(r.xpos) &
 		      !is.na(l.xpos) & !is.na(r.xpos))
  		    mtext(notes$txt[i], 3, #pos=n_s,
-			at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos, 
-#			adj=c(1/2, my.adj), 
+			at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos,
+#			adj=c(1/2, my.adj),
 			cex=2/3)
 
  	    }
@@ -897,15 +897,15 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 #        axis(3, at=c(axis_xlim[1], x_locs, axis_xlim[2]), labels=c("", x_labs, ""),
  	if (show_top_axis) {
 
-            axis(3, at=x_locs[1:length(x_labs)], 
+            axis(3, at=x_locs[1:length(x_labs)],
 		labels=x_labs,
  		xaxt='s',
-		cex.lab=my_cexl, 
-		cex.axis=my_cexa, 
+		cex.lab=my_cexl,
+		cex.axis=my_cexa,
 		mgp=my_mgp,
  		pos=ifelse(R$invert_y, R$y_lim[2]+1/2, R$y_lim[2]-1/2),
- 		padj=ifelse(R$invert_y, 2/2, 0/2), 
-		lwd=1/2)#, 
+ 		padj=ifelse(R$invert_y, 2/2, 0/2),
+		lwd=1/2)#,
 #		tcl=-my.tcl)#k=-0.5/nrow(R$aas))
 
  	} else {
