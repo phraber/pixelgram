@@ -177,7 +177,7 @@ plot.pixgram <- function(x,
 # to do: add axis options or ...
 
 # the second condition/s implicitly assume env with hxb2 present
-    if ((!is.null(notes) & is.list(notes)) | 
+    if ((!is.null(notes) & is.list(notes)) |
 	(annotate_env & !is.null(R$refseq_lut)))
  	    annotate.region(R, notes=notes,
  	        y_lim=c(R$y_lim[1] + ifelse(R$invert_y, -1/2, 1/2),
@@ -244,7 +244,7 @@ color.node <- function(edge_colors, this_tree, node) {
 #'
 #' @param T ape::phylo() tree object.
 #' @param tip_colors vector of colors, whether rgb hex or integers, whose order matches the names in the tree tip.label slot.
-#' 
+#'
 #' @return A vector of colors of length equal to the number of tree branches.
 #'
 #' @export
@@ -589,7 +589,7 @@ pixgram.tree.plot <- function(x,
 
 			for (i in 1:length(R$tre$tip.label))
 		            points(-0.01 * R$raster_width * R$x_lim[2], i,
-				col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], 
+				col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i],
 				cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
 		    }
@@ -647,6 +647,8 @@ pixgram.raster.nt <- function(P, vbars, show_top_axis) {
 
         message("*** Making nt raster map ***")
 
+	if (0) {
+
         # is it really necessary to use nested 'for' loops here?
         for (j in 1:ncol(R$nt_rast)) {
 
@@ -663,6 +665,41 @@ pixgram.raster.nt <- function(P, vbars, show_top_axis) {
               1/2+nrow(R$nts),
             -R$raster_width * R$x_lim[2] * R$raster_margin,
               1/2, interpolate=F)
+	} else {
+
+	  col_alphabet <- unique(c(R$nt_rast))
+
+	  for (j in 1:ncol(R$nt_rast))
+	      for (i in 1:length(col_alphabet))
+	          if (any(R$nt_rast[, j] == col_alphabet[i]))
+	              R$nt_rast[, j] = replace(R$nt_rast[, j],
+	                  which(R$nt_rast[, j] == col_alphabet[i]), i)
+
+	      raster.colors <- pixmap_colors[col_alphabet, R$color_lut_type]
+
+	      my.xlim <- sort(c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin))
+	      my.ylim <- c(1, nrow(R$nts))
+
+	      nt_num <- matrix(as.numeric(R$nt_rast), nc=ncol(R$nt_rast), nrow=nrow(R$nt_rast))
+
+              # adjust grid spacing to enable drawing a rect() surrounds *outer* part of image grid
+	      x.grid.spacing <- 0.5 * (my.xlim[2] - my.xlim[1]) / (ncol(nt_num))
+              x.grid <- seq(my.xlim[1]+x.grid.spacing, my.xlim[2]-x.grid.spacing, length.out=ncol(nt_num))
+              y.grid <- seq(my.ylim[1], my.ylim[2], length.out=nrow(nt_num))
+
+	      if (R$invert_y)
+	          nt_num <- nt_num[nrow(nt_num):1, ]
+
+	      image(sort(x.grid), sort(y.grid),
+	            t(nt_num),  #[ncol(nt_num):1, ],
+	            col=raster.colors,
+	            useRaster=F,
+		    breaks=c(0:length(col_alphabet)) + 1/2,
+	            add=T,
+		    xlab='', ylab='',
+	            ylim=my.ylim,
+	            xlim=my.xlim)
+        }
     }
 
 #par(yaxt='s', xaxt='s')
@@ -765,13 +802,13 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 		    usr[3])# - (usr[4] - usr[3])*0.995)
 
 		n_s <- ifelse(usr[3] < usr[4], 3, 1) # north or south?
-#		n_s <- ifelse(usr[3] < usr[4], 3, 1) # north or south?
 		my.adj=ifelse(usr[3] < usr[4], 1, 0)
+
  		if (!is.null(l.xpos) & !is.null(r.xpos) &
 		      !is.na(l.xpos) & !is.na(r.xpos))
  		    mtext(notes$txt[i], 3, #pos=n_s,
-			at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos, 
-#			adj=c(1/2, my.adj), 
+			at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos,
+#			adj=c(1/2, my.adj),
 			cex=2/3)
 
  	    }
@@ -798,13 +835,6 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 
  	my_refseq_lut = R$refseq_lut
  	my_refseq_lut$aln = (my_refseq_lut$aln - 1)/my_slope - R$raster_width * R$x_lim[2]
-
-# #	if (!is.null(vbars)) {
-# #	    axis_xlim = c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * 0.025)
-# #            my_slope = (ncol(R$aas)-1)/(axis_xlim[2]-axis_xlim[1])
-# #	    x_locs = (vbars-1)/my_slope - R$raster_width * R$x_lim[2]
-# #	    abline(v=vbars, col='#66666666', lwd=1/2)
-# #	}
     }
 
     if (!is.null(R$aa_rast)) {
@@ -817,23 +847,60 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 	if (R$xform_type==3)
 	    R$color_lut_type = "charge"
 
-#        # is it really necessary to use nested 'for' loops here?
-        for (j in 1:ncol(R$aa_rast)) {
+	if (0) { # 10-02-2015 replace rasterImage() with image(..., useRaster=F) to fix fugly antialiasing
 
-            col_alphabet <- unique(c(R$aa_rast[, j]))
+            # is it really necessary to use nested 'for' loops here?
+	    for (j in 1:ncol(R$aa_rast)) {
 
-#	    R$aa_rast[i, ] <- sapply(1:length(row_aa_alphabet), function(j)
-            for (i in 1:length(col_alphabet))
-		R$aa_rast[, j] = replace(R$aa_rast[, j],
-                    which(R$aa_rast[, j] == col_alphabet[i]),
-                        pixmap_colors[col_alphabet[i], R$color_lut_type])
-        }
+		col_alphabet <- unique(c(R$aa_rast[, j]))
 
-        rasterImage(as.raster(R$aa_rast),
-            -R$raster_width * R$x_lim[2],
-             1/2+nrow(R$aas),
-            -R$raster_width * R$x_lim[2] * R$raster_margin, #0.025,
-             1/2, interpolate=F)
+		for (i in 1:length(col_alphabet))
+		    R$aa_rast[, j] = replace(R$aa_rast[, j],
+                        which(R$aa_rast[, j] == col_alphabet[i]),
+                            pixmap_colors[col_alphabet[i], R$color_lut_type])
+	    }
+
+	    rasterImage(as.raster(R$aa_rast),
+	                -R$raster_width * R$x_lim[2],
+	                1/2+nrow(R$aas),
+	                -R$raster_width * R$x_lim[2] * R$raster_margin, #0.025,
+	                1/2, interpolate=F)
+
+	} else {
+
+	  col_alphabet <- unique(c(R$aa_rast))
+
+	  for (j in 1:ncol(R$aa_rast))
+	    for (i in 1:length(col_alphabet))
+	      if (any(R$aa_rast[, j] == col_alphabet[i]))
+	        R$aa_rast[, j] = replace(R$aa_rast[, j],
+	                                 which(R$aa_rast[, j] == col_alphabet[i]), i)
+
+	      raster.colors <- pixmap_colors[col_alphabet, R$color_lut_type]
+
+	      my.xlim <- sort(c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin))
+	      my.ylim <- c(1, nrow(R$aas))
+
+	      aa_num <- matrix(as.numeric(R$aa_rast), nc=ncol(R$aa_rast), nrow=nrow(R$aa_rast))
+
+              # adjust grid spacing to enable drawing a rect() surrounds *outer* part of image grid
+	      x.grid.spacing <- 0.5 * (my.xlim[2] - my.xlim[1]) / (ncol(aa_num))
+              x.grid <- seq(my.xlim[1]+x.grid.spacing, my.xlim[2]-x.grid.spacing, length.out=ncol(aa_num))
+              y.grid <- seq(my.ylim[1], my.ylim[2], length.out=nrow(aa_num))
+
+	      if (R$invert_y)
+	          aa_num <- aa_num[nrow(aa_num):1, ]
+
+	      image(sort(x.grid), sort(y.grid),
+	            t(aa_num),#[ncol(aa_num):1, ],
+	            col=raster.colors,
+	            useRaster=F,
+		    breaks=c(0:length(raster.colors)) + 1/2,
+	            add=T,
+		    xlab='', ylab='',
+	            ylim=my.ylim,
+	            xlim=my.xlim)
+	}
     }
 
     rect(-R$raster_width * R$x_lim[2], 1/2 + nrow(R$aas),
@@ -897,15 +964,15 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 #        axis(3, at=c(axis_xlim[1], x_locs, axis_xlim[2]), labels=c("", x_labs, ""),
  	if (show_top_axis) {
 
-            axis(3, at=x_locs[1:length(x_labs)], 
+            axis(3, at=x_locs[1:length(x_labs)],
 		labels=x_labs,
  		xaxt='s',
-		cex.lab=my_cexl, 
-		cex.axis=my_cexa, 
+		cex.lab=my_cexl,
+		cex.axis=my_cexa,
 		mgp=my_mgp,
  		pos=ifelse(R$invert_y, R$y_lim[2]+1/2, R$y_lim[2]-1/2),
- 		padj=ifelse(R$invert_y, 2/2, 0/2), 
-		lwd=1/2)#, 
+ 		padj=ifelse(R$invert_y, 2/2, 0/2),
+		lwd=1/2)#,
 #		tcl=-my.tcl)#k=-0.5/nrow(R$aas))
 
  	} else {
