@@ -351,25 +351,25 @@ pixgram.tree.plot <- function(x,
     ...) {
 
     if (class(x) != "pixgram")
-	stop("pixgram.tree.plot ERROR: Please specify pixgram object")
+        stop("pixgram.tree.plot ERROR: Please specify pixgram object")
 
-    R <- x
-    message("*** pixgram.tree.plot ***\n")
-    class(R) <- "pixgram"
+     R <- x
+     message("*** pixgram.tree.plot ***\n")
+     class(R) <- "pixgram"
 
-    if (is.null(R$x_lim) & is.null(R$y_lim)) {
-	tree_out <- ape::plot.phylo(R$tre, font=1,
-	    no.margin=no_margin, plot=F, ...)
-    } else if (!is.null(R$x_lim) &  is.null(R$y_lim)) {
-	tree_out <- ape::plot.phylo(R$tre, font=1,
-	    no.margin=no_margin, x.lim=R$x_lim, plot=F, ...)
-    } else if ( is.null(R$x_lim) & !is.null(R$y_lim)) {
-	tree_out <- ape::plot.phylo(R$tre, font=1,
-	    no.margin=no_margin, y.lim=R$y_lim, plot=F, ...)
-    } else {
-	tree_out <- ape::plot.phylo(R$tre, font=1,
-	    no.margin=no_margin, x.lim=R$x_lim, y.lim=R$y_lim, plot=F, ...)
-    }
+     if (is.null(R$x_lim) & is.null(R$y_lim)) {
+       tree_out <- ape::plot.phylo(R$tre, font=1,
+                                   no.margin=no_margin, plot=F, ...)
+     } else if (!is.null(R$x_lim) &  is.null(R$y_lim)) {
+       tree_out <- ape::plot.phylo(R$tre, font=1,
+                                   no.margin=no_margin, x.lim=R$x_lim, plot=F, ...)
+     } else if ( is.null(R$x_lim) & !is.null(R$y_lim)) {
+       tree_out <- ape::plot.phylo(R$tre, font=1,
+                                   no.margin=no_margin, y.lim=R$y_lim, plot=F, ...)
+     } else {
+       tree_out <- ape::plot.phylo(R$tre, font=1,
+                                   no.margin=no_margin, x.lim=R$x_lim, y.lim=R$y_lim, plot=F, ...)
+     }
 
     ### why not [1]?
 #    R$x_lim <- c(-1.025* R$raster_width * tree_out$x.lim[2], tree_out$x.lim[2])
@@ -378,12 +378,12 @@ pixgram.tree.plot <- function(x,
 #    R$y_lim <- c(length(R$tre$tip.label), 1)
 
     if (no_margin)
-	R$y_lim <- c(max(tree_out$y.lim) + 1, min(tree_out$y.lim) - 1)
+        R$y_lim <- c(max(tree_out$y.lim) + 1, min(tree_out$y.lim) - 1)
 #	R$y_lim <- c(1+length(R$tre$tip.label), 0) # or 1/2?
 #	R$y_lim <- c(1+length(R$tre$tip.label), 0) # or 1/2?
 
     if (R$invert_y == T)
-	R$y_lim <- rev(R$y_lim)
+        R$y_lim <- rev(R$y_lim)
 
     message(paste("tree x_lim: ", R$x_lim[1], R$x_lim[2]))
     message(paste("tree y_lim: ", R$y_lim[1], R$y_lim[2]))
@@ -401,7 +401,7 @@ pixgram.tree.plot <- function(x,
             edge_colors <- color.edges(R$tre, leaf_colors)
 
     } else {
-	if (is.null(edge_colors))
+      	if (is.null(edge_colors))
             edge_colors = "black" # default.edge.color
     }
 
@@ -443,6 +443,7 @@ pixgram.tree.plot <- function(x,
 	}
     }
   }
+
 #    show_tip_label = T #ifelse(is.null(tip_labels), T, F)
     safe.tiplabels = R$tre$tip.label
     if (is.character(tip_labels$pch))
@@ -464,7 +465,7 @@ pixgram.tree.plot <- function(x,
 
     R$tre$tip.label = safe.tiplabels
 
-        # design issue here is how to map leaf names to { pch, bg, col }
+    # design issue here is how to map leaf names to { pch, bg, col }
     if (!is.null(tip_labels) & !is.null(tip_labels$pch)) {
 
         if (!is.null(tip_labels) & length(which(is.na(tip_labels$pch))) > 1)
@@ -489,25 +490,27 @@ pixgram.tree.plot <- function(x,
 	    if ((!is.null(leaf_colors) & is.null(tip_labels$col)) |
 		(!is.null(tip_labels$col) & length(which(tip_labels$col != leaf_colors)) > 0))
 		    for (i in 1:length(R$tre$tip.label))
-                    points(-1.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2)
+		        points(-1.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2, pch=15)
 
-	    if (!is.null(tip_labels$col)) {
+		if (!is.null(tip_labels$col)) {
 
-	        if (is.null(tip_labels$pch)) {
-		    for (i in 1:length(R$tre$tip.label))
-		        points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2)
-		} else {
-		    if (length(tip_labels$bgs)==1)
-			tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pch))
+	        if (is.null(tip_labels$pch) | any(is.na(tip_labels$pch))) {
 
-		    for (i in 1:length(R$tre$tip.label))
-		        points(-0.01 * R$raster_width * R$x_lim[2], i,
-			    col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], cex=R$my_cex, lwd=1/2)
+#		      for (i in 1:length(R$tre$tip.label))
+#		        points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2, pch=15)
+
+# unsure why a second column of black tiplabels appears immediately next to pheno_matrix
+#		} else {
+#		    if (length(tip_labels$bgs)==1)
+#			tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pch))
+#		    for (i in 1:length(R$tre$tip.label))
+#		        points(-0.01 * R$raster_width * R$x_lim[2], i,
+#			      col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
 		}
 	    }
         }
-
+    }
         ### HERE we plot the phenotypic/binding/neutralization data
         # should this really be nested within if (!is.null(tip_labels))?
 
@@ -522,28 +525,14 @@ pixgram.tree.plot <- function(x,
 		L_pos = -R$raster_width * R$x_lim[2] * R$raster_margin * (1 - (col_num-1)/(1+ncol(pheno_matrix)))
 		R_pos = -R$raster_width * R$x_lim[2] * R$raster_margin * (1 - col_num/(1+ncol(pheno_matrix)))
 
-#		if (R$invert_y == T) {
-
 		myordering <- R$tre$edge[which(R$tre$edge[, 2] <= length(R$tre$tip.label)), 2]
 
 		rect(rep(L_pos, length(R$tre$tip.label)),
-			c(length(R$tre$tip.label):1)-1/4,
+			c(length(R$tre$tip.label):1)-1/2,
 			rep(R_pos, length(R$tre$tip.label)),
-			c(length(R$tre$tip.label):1)+1/4,
-#			col=pheno_matrix[, col_num],
-		    col=pheno_matrix[myordering[c(length(R$tre$tip.label):1)], col_num],
+			c(length(R$tre$tip.label):1)+1/2,
+			col=pheno_matrix[myordering[c(length(R$tre$tip.label):1)], col_num],
 			border=NA)
-
-#		} else {
-
-#		    rect(rep(L_pos, length(R$tre$tip.label)),
-#			c(length(R$tre$tip.label):1)-1/2,
-#			rep(R_pos, length(R$tre$tip.label)),
-#			c(length(R$tre$tip.label):1)+1/2,
-#			col=pheno_matrix[, col_num],
-##		    col=pheno_matrix[myordering[c(length(R$tre$tip.label):1)], col_num],
-#			border=NA)
-#		}
 
 		if (!is.null(pheno_colnames)) {
 
@@ -568,34 +557,36 @@ pixgram.tree.plot <- function(x,
 		    text(myxpos, ypos.2, pheno_letters[col_num], cex=1/3, adj=c(1/2, 1))
 		}
 	    }
+	}
 
-	} else {
+    if (!is.null(tip_labels) & !is.null(tip_labels$pch)) {
 
-	    if (plot_margin_points) {
+	if (plot_margin_points) {
 
-	        if ((!is.null(leaf_colors) & is.null(tip_labels$col)) |
-		    (!is.null(tip_labels$col) & length(which(tip_labels$col != leaf_colors)) > 0))
-	                for (i in 1:length(R$tre$tip.label))
-                            points(-0.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2)
+	    if ((!is.null(leaf_colors) & is.null(tip_labels$col)) |
+		(!is.null(tip_labels$col) & length(which(tip_labels$col != leaf_colors)) > 0))
+	        for (i in 1:length(R$tre$tip.label))
+                    points(-0.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2, pch=15)
 
-	        if (!is.null(tip_labels$col)) {
+	    if (!is.null(tip_labels$col)) {
 
-	            if (is.null(tip_labels$pch)) {
-			for (i in 1:length(R$tre$tip.label))
-		            points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2)
-		    } else {
-			if (length(tip_labels$bgs)==1)
-			    tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pch))
+		if (is.null(tip_labels$pch) | any(is.na(tip_labels$pch))) {
 
-			for (i in 1:length(R$tre$tip.label))
-		            points(-0.01 * R$raster_width * R$x_lim[2], i,
-				col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i],
-				cex=R$my_cex, lwd=1/2)
+#		    for (i in 1:length(R$tre$tip.label))
+#		        points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2, pch=15)
+
+# unsure why a second column of black tiplabels appears immediately next to pheno_matrix
+#		} else {
+#		    if (length(tip_labels$bgs)==1)
+#			tip_labels$bgs = rep(tip_labels$bgs, length(tip_labels$pch))
+#		    for (i in 1:length(R$tre$tip.label))
+#		        points(-0.01 * R$raster_width * R$x_lim[2], i,
+#			    col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i],
+#			    cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
-		    }
 		}
 	    }
-        }
+	}
     }
 
     if (!is.null(legend_attributes)) {
@@ -805,12 +796,19 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 		my.adj=ifelse(usr[3] < usr[4], 1, 0)
 
  		if (!is.null(l.xpos) & !is.null(r.xpos) &
-		      !is.na(l.xpos) & !is.na(r.xpos))
- 		    mtext(notes$txt[i], 3, #pos=n_s,
-			at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos,
-#			adj=c(1/2, my.adj),
-			cex=2/3)
+		      !is.na(l.xpos) & !is.na(r.xpos)) {
 
+		    if (R$xform_master) # use blank space at top of pixel plot
+ 			text(x=mean(c(l.xpos, r.xpos)), 
+			    y=1, # could figure out which row is master sequence row but whatever
+			    notes$txt[i], #pos=n_s,
+			    cex=2/3)
+
+		    if (!R$xform_master) # use margin
+ 			mtext(notes$txt[i], 3, #pos=n_s,
+			    at=mean(c(l.xpos, r.xpos)), line=-1/2, #y.pos,
+			    cex=2/3)
+		}
  	    }
         }
     }
