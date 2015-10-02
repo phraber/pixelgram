@@ -14,7 +14,7 @@
 #'
 #' Entries in the \code{scale_bar} list argument should be named \code{'pos'} for plot-position coordinates, \code{'lwd'}, \code{'len'} for bar length, in terms of the plot coordinates, \code{'cex'}, and \code{'text'}.
 #'
-#' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pchs'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwds'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'cols'} for colors, \code{'title'}, and \code{'text'}.
+#' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pch'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwd'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'col'} for colors, \code{'title'}, and \code{'text'}.
 #'
 #' @param x pixgram object to be plotted
 #' @param xform_type see \code{help(pixgramr::pixgram())}.
@@ -268,67 +268,67 @@ add.legend <- function(L) {
     if (!is.null(L$text)) {
 
         if (is.null(L$location)) L$location='topright'
-	if (is.null(L$bty)) L$bty = 'n'
-#	if (is.null(L$bg)) L$bg = 'white'
-	if (is.null(L$pt.bg)) L$pt.bg = 'white'
-	if (is.null(L$box_col)) L$box_col = NA
-	if (is.null(L$cex)) L$cex = 1
+        if (is.null(L$bty)) L$bty = 'n'
+        #	if (is.null(L$bg)) L$bg = 'white'
+        if (is.null(L$pt.bg)) L$pt.bg = 'white'
+        if (is.null(L$box.col)) L$box.col = NA
+        if (is.null(L$cex)) L$cex = 1
 
         if (length(L$location) == 2) {
 
-	    if (is.null(L$lwds)) {
+            if (is.null(L$lwd)) {
 
-		legend(L$location[1], L$location[2],
-		    L$text, col=L$cols, cex=L$cex,
-		    pch=L$pchs, bty=L$bty, bg=L$bg,
-		    pt.bg=L$pt.bg,
-		    box.col=L$box_col,
-		    title=L$title, pt.cex=L$pt.cex)
+                legend(L$location[1], L$location[2],
+                       L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, bty=L$bty, bg=L$bg,
+                       pt.bg=L$pt.bg,
+                       box.col=L$box_col,
+                       title=L$title, pt.cex=L$pt.cex)
 
-	    } else if (is.null(L$pchs)) {
+            } else if (is.null(L$pch)) {
 
-		legend(L$location[1], L$location[2],
-		    L$text, col=L$cols, cex=L$cex,
-                    lwd=L$lwds, bty=L$bty, bg=L$bg,
-		    box.col=L$box_col,
-		    pt.bg=L$pt.bg,
-		    title=L$title, pt.cex=L$pt.cex)
-	    } else {
+                legend(L$location[1], L$location[2],
+                       L$text, col=L$col, cex=L$cex,
+                       lwd=L$lwd, bty=L$bty, bg=L$bg,
+                       box.col=L$box.col,
+                       pt.bg=L$pt.bg,
+                       title=L$title, pt.cex=L$pt.cex)
+            } else {
 
-		legend(L$location[1], L$location[2],
-		   L$text, col=L$cols, cex=L$cex,
-                   pch=L$pchs, lwd=L$lwds, bty=L$bty, bg=L$bg,
-		   pt.bg=L$pt.bg,
-		   box.col=L$box_col, title=L$title,
-		   pt.cex=L$pt.cex,
-		   merge=T)
-	    }
+                legend(L$location[1], L$location[2],
+                       L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, lwd=L$lwd, bty=L$bty, bg=L$bg,
+                       pt.bg=L$pt.bg,
+                       box.col=L$box.col, title=L$title,
+                       pt.cex=L$pt.cex,
+                       merge=T)
+            }
 
-	} else { # assume location is a character string?
+        } else { # assume location is a character string?
 
-	    if (is.null(L$lwds)) {
+            if (is.null(L$lwd)) {
 
-		legend(as.character(L$location), L$text, col=L$cols, cex=L$cex,
-                    pch=L$pchs, bty=L$bty, bg=L$bg,
-		    box.col=L$box_col,
-		    title=L$title,
-		    pt.bg=L$pt.bg,
-		    pt.cex=L$pt.cex)
-	    } else if (is.null(L$pchs)) {
+                legend(as.character(L$location), L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, bty=L$bty, bg=L$bg,
+                       box.col=L$box.col,
+                       title=L$title,
+                       pt.bg=L$pt.bg,
+                       pt.cex=L$pt.cex)
+            } else if (is.null(L$pch)) {
 
-		legend(as.character(L$location), L$text, col=L$cols, cex=L$cex,
-                   lwd=L$lwds, bty=L$bty, bg=L$bg, box.col=L$box_col,
-		   title=L$title, pt.cex=L$pt.cex)
-	    } else {
+                legend(as.character(L$location), L$text, col=L$col, cex=L$cex,
+                       lwd=L$lwd, bty=L$bty, bg=L$bg, box.col=L$box.col,
+                       title=L$title, pt.cex=L$pt.cex)
+            } else {
 
-		legend(as.character(L$location), L$text, col=L$cols, cex=L$cex,
-                   pch=L$pchs, lwd=L$lwds, bty=L$bty, bg=L$bg,
-		   pt.bg=L$pt.bg,
-		   box.col=L$box_col, title=L$title,
-		   pt.cex=L$pt.cex,
-		   merge=T)
-	    }
-	}
+                legend(as.character(L$location), L$text, col=L$col, cex=L$cex,
+                       pch=L$pch, lwd=L$lwd, bty=L$bty, bg=L$bg,
+                       pt.bg=L$pt.bg,
+                       box.col=L$box.col, title=L$title,
+                       pt.cex=L$pt.cex,
+                       merge=T)
+            }
+        }
     }
 }
 
