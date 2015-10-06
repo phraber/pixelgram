@@ -671,7 +671,7 @@ pixgram.raster.nt <- function(P, vbars, show_top_axis) {
 	      my.xlim <- sort(c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin))
 	      my.ylim <- c(1, nrow(R$nts))
 
-	      nt_num <- matrix(as.numeric(R$nt_rast), nc=ncol(R$nt_rast), nrow=nrow(R$nt_rast))
+	      nt_num <- matrix(as.numeric(R$nt_rast), ncol=ncol(R$nt_rast), nrow=nrow(R$nt_rast))
 
               # adjust grid spacing to enable drawing a rect() surrounds *outer* part of image grid
 	      x.grid.spacing <- 0.5 * (my.xlim[2] - my.xlim[1]) / (ncol(nt_num))
@@ -879,7 +879,7 @@ pixgram.raster.aa <- function(P, vbars, show_top_axis) {
 	      my.xlim <- sort(c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin))
 	      my.ylim <- c(1, nrow(R$aas))
 
-	      aa_num <- matrix(as.numeric(R$aa_rast), nc=ncol(R$aa_rast), nrow=nrow(R$aa_rast))
+	      aa_num <- matrix(as.numeric(R$aa_rast), ncol=ncol(R$aa_rast), nrow=nrow(R$aa_rast))
 
               # adjust grid spacing to enable drawing a rect() surrounds *outer* part of image grid
 	      x.grid.spacing <- 0.5 * (my.xlim[2] - my.xlim[1]) / (ncol(aa_num))
