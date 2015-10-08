@@ -1,8 +1,9 @@
-citHeader("To cite the lassie method in publications, please use:")
+citHeader("To cite the pixgramr package in publication, please use:")
 
-citEntry(entry = "Unpublished",
- title	       = "Longitudinal Antigenic Sequences and Sites from Intrahost Evolution (LASSIE) Identifies Immune-Selected HIV Variants over Time",
- note	       = "Submitted, LA-UR-15-24067, LA-CC-2015-053",
+citEntry(entry = "Article",
+ title	       = "Longitudinal Antigenic Sequences and Sites from Intra-Host Evolution (LASSIE) Identifies Immune-Selected HIV Variants",
+ journal       = "Viruses",
+ note	       = "In press",
  author	       = personList(as.person("Peter Hraber"), 
  	 	    as.person("Bette Korber"), 
 		    as.person("Kshitij Wagh"),
@@ -23,8 +24,8 @@ citEntry(entry = "Unpublished",
 		    as.person("Feng Gao"),
 		    as.person("Barton F. Haynes")),
  year	       = "2015",
- url	       = "https://github.com/phraber/lassie",
- textVersion= paste("Hraber P, Korber B, Wagh K, Giorgi EE, Bhattacharya T, et al. 2015.",
-"Longitudinal Antigenic Sequences and Sites from Intrahost Evolution (LASSIE) Identifies Immune-Selected HIV Variants over Time", "Submitted", "LA-UR-15-24067", "LA-CC-2015-053"))
+ url	       = "https://www.mdpi.com/journal/viruses/special_issues/bioinformatics",
+ textVersion= paste("Hraber P, Korber B, Wagh K, Giorgi EE, Bhattacharya T, et al.",
+"Longitudinal antigenic sequences and sites from intra-host evolution (LASSIE) identifies immune-selected HIV variants.", "Viruses,", "in press."))
 
-citFooter("If you used the included CH505 sequence data in a publication, please cite Liao et al., 2013 (http://ncbi.nlm.nih.gov/pubmed/23552890) and Gao et al., 2014 (http://ncbi.nlm.nih.gov/pubmed/25065977).  Thank you!")
+citFooter("If you used the included CH505 sequence data in publication, please cite Liao et al., 2013 (http://ncbi.nlm.nih.gov/pubmed/23552890) and Gao et al., 2014 (http://ncbi.nlm.nih.gov/pubmed/25065977).  Thank you!")

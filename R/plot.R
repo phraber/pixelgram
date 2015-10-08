@@ -393,7 +393,7 @@ pixgram.tree.plot <- function(x,
 
     if (!is.null(leaf_colors)) {
 
-        if (length(which(is.na(leaf_colors))) > 0)
+        if (any(is.na(leaf_colors)))
             stop(paste("pixgram.tree.plot() ERROR! Undefined leaf_colors:",
 		paste(R$tre$tip.label[which(is.na(leaf_colors))], collapse=" ")))
 
@@ -488,7 +488,7 @@ pixgram.tree.plot <- function(x,
 	if (plot_margin_points) {
 
 	    if ((!is.null(leaf_colors) & is.null(tip_labels$col)) |
-		(!is.null(tip_labels$col) & length(which(tip_labels$col != leaf_colors)) > 0))
+		(!is.null(tip_labels$col) & any(tip_labels$col != leaf_colors)))
 		    for (i in 1:length(R$tre$tip.label))
 		        points(-1.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2, pch=15)
 
@@ -564,7 +564,7 @@ pixgram.tree.plot <- function(x,
 	if (plot_margin_points) {
 
 	    if ((!is.null(leaf_colors) & is.null(tip_labels$col)) |
-		(!is.null(tip_labels$col) & length(which(tip_labels$col != leaf_colors)) > 0))
+		(!is.null(tip_labels$col) & any(tip_labels$col != leaf_colors)))
 	        for (i in 1:length(R$tre$tip.label))
                     points(-0.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2, pch=15)
 
