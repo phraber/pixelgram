@@ -1,6 +1,9 @@
-#' Create (construct) a pixgram object.
+#' @export
+pixelgram.default <- function(...) UseMethod("pixelgram")
+
+#' Create (construct) a pixelgram object.
 #'
-#' \code{pixgram()} returns a pixgram object for plotting.
+#' \code{pixelgram()} returns a pixelgram object for plotting.
 #'
 #' At minimum, a nucleotide sequence alignment must be provided. If no tree is given, \code{ape::bionj} will make a neighbor-joining tree with simplified parameters.  The alignment can be translated (in +1 reading frame) with the standard genetic code by setting \code{is_orf=T}.  For other translation options see \code{seqinr::translate}.
 #'
@@ -30,10 +33,10 @@
 #' @param x_lim Range of x coordinates to use for plotting, set automatically.
 #' @param y_lim Range of y coordinates to use for plotting, set automatically.
 #' @param invert_y Should the y-axis be inverted?
-#' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixgram output.
+#' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixelgram output.
 #' @param sub Plot subtitle, i.e. region sequenced.  If specified, it appears with "site" below the pixel plot.
 #'
-#' @return pixgram object
+#' @return pixelgram object
 #'
 #' @seealso
 #'
@@ -46,12 +49,12 @@
 #'
 #' @examples
 #' \dontrun{
-#'   plot( pg <- pixgramr::pixgram(nts=pixgramr::hiv.ref$nts) )
+#'   plot( pg <- pixelgram::pixelgram(nts=pixelgram::hiv.ref$nts) )
 #' }
 #'
 #' @export
 
-pixgram <- function(tre_file=NULL,
+pixelgram <- function(tre_file=NULL,
                             tre=NULL,
                             nts_file=NULL,
                             nts=NULL,
@@ -79,7 +82,7 @@ pixgram <- function(tre_file=NULL,
                             invert_y=F,
 main=NULL, sub=NULL) {
 
-    message("*** Creating pixgram ***")
+    message("*** Creating pixelgram ***")
 
     P <- list(tre_file=tre_file,
               nts_file=nts_file,
@@ -125,7 +128,7 @@ main=NULL, sub=NULL) {
 #              palette=NULL)#, #palette, # this is used for tree decoration
     #        verbose=verbose)
 
-    class(P) <- "pixgram"
+    class(P) <- "pixelgram"
 
     if (!is.null(tre_file))
         P <- set.tre.file(P, tre_file)
@@ -150,7 +153,7 @@ main=NULL, sub=NULL) {
 }
 
 #    if (strip_columns) {
-#	P <- pixgram.colstrip(P)
+#	P <- pixelgram.colstrip(P)
 #    } else {
 #        # could help later with refseq lookups?
 #        if (!is.null(P$aas))
@@ -161,16 +164,16 @@ main=NULL, sub=NULL) {
 
 #' Sets the alignment file, whether nt or aa.  Also sets the refseq.
 #'
-#' @param P pixgram object
+#' @param P pixelgram object
 #' @param f alignment file name
 #' @param file_type Specifies alignment file type.  Must be "aa", "nt", or "codon".
 #' @param alignment_format Alignment file format, one "fasta", "clustal", "phylip", "msf", or "mase"
-#' @return updated pixgram object
+#' @return updated pixelgram object
 #' @export
 set.aln.file <- function(P, f, file_type='aa', alignment_format='fasta') {
 
-    if (class(P) != "pixgram")
-	stop("set.aln.file ERROR: Please specify a valid pixgram object")
+    if (class(P) != "pixelgram")
+	stop("set.aln.file ERROR: Please specify a valid pixelgram object")
 
     if (! file_type %in% c("nt", "aa", "codon"))
 	stop("set.aln.file ERROR: Please specify a valid file type")
@@ -248,16 +251,16 @@ set.nt_aln.from.file <- function(P, alignment_format='fasta') {
     return ( P )
 }
 
-#' Assign a Newick-formatted tree file to a pixgram object.
+#' Assign a Newick-formatted tree file to a pixelgram object.
 #'
-#' @param x Pixgram object
+#' @param x Pixelgram object
 #' @param f Name of file containing a Newick tree.
-#' @return Updated pixgram object
+#' @return Updated pixelgram object
 #' @export
 set.tre.file <- function(x, f) {
 
-    if (class(x) != "pixgram")
-	stop("set.tre.file ERROR: Please specify a valid pixgram object")
+    if (class(x) != "pixelgram")
+	stop("set.tre.file ERROR: Please specify a valid pixelgram object")
 
     if (!is.null(f))
         x$tre_file = f
@@ -270,8 +273,8 @@ set.tre.file <- function(x, f) {
 #' @keywords internal
 translate.codons <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("translate.codons ERROR: Please specify a valid pixgram object")
+    if (class(P) != "pixelgram")
+	stop("translate.codons ERROR: Please specify a valid pixelgram object")
 
     if (!is.null(P$nts) & is.null(P$aas)) {
 
@@ -299,8 +302,8 @@ translate.codons <- function(P) {
 #' @keywords internal
 set.tree.from.file <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("set.tree.from.file ERROR: Please specify a valid pixgram object")
+    if (class(P) != "pixelgram")
+	stop("set.tree.from.file ERROR: Please specify a valid pixelgram object")
 
     if (!is.null(P$tre))
         warning("set.tree.from.file WARNING: updating existing tree")
@@ -313,16 +316,16 @@ set.tree.from.file <- function(P) {
 }
 
 #' @keywords internal
-pixgram.colstrip <- function(P) {
+pixelgram.colstrip <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("pixgram.colstrip ERROR: Please specify a valid pixgram object")
+    if (class(P) != "pixelgram")
+	stop("pixelgram.colstrip ERROR: Please specify a valid pixelgram object")
 
     message("*** Stripping ***")
 
     R <- P
 
-    class(R) <- "pixgram"
+    class(R) <- "pixelgram"
 
     if (!is.null(P$aas)) {
 
@@ -378,8 +381,8 @@ pixgram.colstrip <- function(P) {
 #' @keywords internal
 create.nj.tree <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("create.nj.tree ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("create.nj.tree ERROR: Please specify pixelgram object")
 
     message("*** Computing NJ tree from nts using K80, no rate variation ***")
 
@@ -402,10 +405,10 @@ create.nj.tree <- function(P) {
 }
 
 #' @keywords internal
-pixgram.validate <- function(P) {
+pixelgram.validate <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("pixgram.validate ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("pixelgram.validate ERROR: Please specify pixelgram object")
 
     message("*** Validating ***")
 
@@ -413,7 +416,7 @@ pixgram.validate <- function(P) {
           c("__none__", "__consensus__", "__first__", "__last__",
             P$tre$tip.label)) {
 
-        stop(paste0("pixgram ERROR: Unrecognized master_name: ",
+        stop(paste0("pixelgram ERROR: Unrecognized master_name: ",
                   P$master_name))
     }
 
@@ -428,13 +431,13 @@ pixgram.validate <- function(P) {
 
         if (length(P$tre$tip.label) != nrow(P$nts))
             cat(paste(
-                "pixgram WARNING: Number of sequences differs between tree and nt alignment: tree has ",
+                "pixelgram WARNING: Number of sequences differs between tree and nt alignment: tree has ",
                 length(P$tre$tip.label), " leaves vs. ",
                 nrow(P$nts), " aligned nts.\n"))
 
         if (length(which(!rownames(P$nts) %in% P$tre$tip.label) > 0))
                 stop(paste(
-                    "pixgram ERROR: Tree lacks sequences found in nt alignment:",
+                    "pixelgram ERROR: Tree lacks sequences found in nt alignment:",
                     paste(rownames(P$nts)[which(!rownames(P$nts) %in% P$tre$tip.label)],
 		    collapse=" ")))
     }
@@ -450,7 +453,7 @@ pixgram.validate <- function(P) {
 
             if (length(which(!rownames(P$aas) %in% P$tre$tip.label) > 0))
                 stop(paste(
-                    "pixgram ERROR: Tree lacks sequences found in AA alignment:",
+                    "pixelgram ERROR: Tree lacks sequences found in AA alignment:",
                     paste(rownames(P$aas)[which(!rownames(P$aas) %in% P$tre$tip.label)],
 		    collapse=" ")))
 
@@ -462,15 +465,15 @@ pixgram.validate <- function(P) {
 }
 
 #' @keywords internal
-pixgram.reorder <- function(P) {
+pixelgram.reorder <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("pixgram.reorder ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("pixelgram.reorder ERROR: Please specify pixelgram object")
 
     message("*** Reordering ***")
 
     R <- P
-    class(R) <- "pixgram"
+    class(R) <- "pixelgram"
 
     if (!is.null(P$nts) & !is.null(P$tre)) {
 
@@ -505,8 +508,8 @@ pixgram.reorder <- function(P) {
 #' @keywords internal
 set.master.name <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("set.master.name ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("set.master.name ERROR: Please specify pixelgram object")
 
     if (!is.null(P$master_name)) {
 
@@ -544,8 +547,8 @@ set.master.name <- function(P) {
 #' @keywords internal
 set.master <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("set.master ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("set.master ERROR: Please specify pixelgram object")
 
     if (P$master_name != "__none__") {
 
@@ -566,11 +569,11 @@ set.master <- function(P) {
             if (!is.null(P$nts)) {
 
                 if (!P$master_name %in% rownames(P$nts))
-                    stop(paste0("pixgram ERROR: master '",
+                    stop(paste0("pixelgram ERROR: master '",
                         P$master_name, "' not in nt alignment"))
 
                 if (length(which(rownames(P$nts) == P$master_name)) != 1)
-                    stop(paste0("pixgram ERROR: master '",
+                    stop(paste0("pixelgram ERROR: master '",
                          P$master_name, "' not unique in nt alignment"))
 
                 P$nt_master = P$nts[P$master_name, ]
@@ -579,11 +582,11 @@ set.master <- function(P) {
             if (!is.null(P$aas)) {
 
                 if (!P$master_name %in% rownames(P$aas))
-                    stop(paste0("pixgram ERROR: did not find master '",
+                    stop(paste0("pixelgram ERROR: did not find master '",
                         P$master_name, "' in aa alignment"))
 
                 if (length(which(rownames(P$aas) == P$master_name)) != 1)
-                    stop(paste0("pixgram ERROR: master '",
+                    stop(paste0("pixelgram ERROR: master '",
                         P$master_name, "' not unique in aa alignment"))
 
                 P$aa_master = P$aas[P$master_name, ]
@@ -594,13 +597,13 @@ set.master <- function(P) {
     return ( P )
 }
 #' @keywords internal
-pixgram.xform <- function(P) {
+pixelgram.xform <- function(P) {
 
-    if (class(P) != "pixgram")
-	stop("pixgram.xform ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("pixelgram.xform ERROR: Please specify pixelgram object")
 
     if (!P$xform_type %in% c(0:3))
-	stop("pixgram.xform ERROR: Please indicate transformation type.")
+	stop("pixelgram.xform ERROR: Please indicate transformation type.")
 
     if (P$master_name == "__none__") {
 	P$aa_rast = P$aas
@@ -614,7 +617,7 @@ pixgram.xform <- function(P) {
 	P$aa_rast = P$aas
 
         if (length(P$aa_master) != ncol(P$aas))
-            stop(paste("pixgram ERROR: aa master mismatches alignment length:",
+            stop(paste("pixelgram ERROR: aa master mismatches alignment length:",
 		    length(P$aa_master), '!=', ncol(P$aas)))
 
         # if master is in the alignment, need to restore it after xforming
@@ -702,7 +705,7 @@ pixgram.xform <- function(P) {
 	P$nt_rast = P$nts
 
         if (length(P$nt_master) != ncol(P$nts))
-            stop(paste("pixgram ERROR: nt master mismatches alignment:",
+            stop(paste("pixelgram ERROR: nt master mismatches alignment:",
 		length(P$nt_master), '!=', ncol(P$nts)))
 
         # if master is in the alignment, need to restore it after xforming
@@ -751,13 +754,13 @@ pixgram.xform <- function(P) {
 }
 
 #' @export
-print.pixgram <- function(x, ...) summary.pixgram(x, ...)
+print.pixelgram <- function(x, ...) summary.pixelgram(x, ...)
 
 #' @export
-summary.pixgram <- function(object, ...) {
+summary.pixelgram <- function(object, ...) {
 
-    if (class(object) != "pixgram")
-	stop("pixgram.summary ERROR: Please specify pixgram object")
+    if (class(object) != "pixelgram")
+	stop("pixelgram.summary ERROR: Please specify pixelgram object")
 
     message(paste("Tree has", length(object$tre$tip.label), "leaves."))
 

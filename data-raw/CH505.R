@@ -1,5 +1,5 @@
-aas_file <- system.file("extdata", "CH505-gp160.fasta", package="pixgramr")
-tre_file <- system.file("extdata", "CH505-gp160.tre", package="pixgramr")
+aas_file <- system.file("extdata", "CH505-gp160.fasta", package="pixelgram")
+tre_file <- system.file("extdata", "CH505-gp160.tre", package="pixelgram")
 
 CH505 <- list()
 CH505$aas <- seqinr::as.matrix.alignment(seqinr::read.alignment(aas_file, 

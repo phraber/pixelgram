@@ -1,5 +1,5 @@
-nts_file <- system.file("extdata", "hiv-ref.fasta", package="pixgramr")
-tre_file <- system.file("extdata", "hiv-ref.tre", package="pixgramr")
+nts_file <- system.file("extdata", "hiv-ref.fasta", package="pixelgram")
+tre_file <- system.file("extdata", "hiv-ref.tre", package="pixelgram")
 
 hiv.ref <- list()
 hiv.ref$nts <- seqinr::as.matrix.alignment(seqinr::read.alignment(nts_file, "fasta"))

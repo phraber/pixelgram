@@ -1,4 +1,4 @@
-lut_file <- system.file("extdata", "color-lut.csv", package="pixgramr")
+lut_file <- system.file("extdata", "color-lut.csv", package="pixelgram")
 pixmap_colors <-read.csv(lut_file, header=T, stringsAsFactors=F, strip.white=T)
 devtools::use_data(pixmap_colors, internal=T, overwrite=T)
 

@@ -1,6 +1,6 @@
-#' Renders the pixgram object
+#' Renders the pixelgram object
 #'
-#' This layout-compatible method validates the pixgram object, establishes plot coordinates, and draws the pixel and phylogram plots.
+#' This layout-compatible method validates the pixelgram object, establishes plot coordinates, and draws the pixel and phylogram plots.
 #'
 #' The x-axis of the plot coordinate system is positive for the tree-plotting region, and negative for the pixel-plotting region.  Setting \code{raster_width} rescales the minimum x-axis value by this factor.  The default is 1, so the pixel and raster plots are equal width.  The \code{raster_margin} parameter rescales the right (least negative) edge of the pixel plot, to leave a gap between pixel and tree, e.g. to include a heatmap of phyenotypic assay results.
 #'
@@ -16,9 +16,9 @@
 #'
 #' Entries in the \code{legend_attributes} list argument should be named \code{'location'} for legend positioning as defined in \code{?legend}, \code{'pch'}, \code{'cex'}, \code{'pt.cex'}, \code{'lwd'}, \code{'bg'}, \code{'bty'}, \code{'box.col'}, \code{'col'} for colors, \code{'title'}, and \code{'text'}.
 #'
-#' @param x pixgram object to be plotted
-#' @param xform_type see \code{help(pixgramr::pixgram())}.
-#' @param xform_master see \code{help(pixgramr::pixgram())}.
+#' @param x pixelgram object to be plotted
+#' @param xform_type see \code{help(pixelgram::pixelgram())}.
+#' @param xform_master see \code{help(pixelgram::pixelgram())}.
 #' @param leaf_colors vector of tree leaf colors; can be colors or integers
 #' @param legend_attributes Named list of entries that go into the legend
 #' @param edge_widths tree edge widths
@@ -41,17 +41,17 @@
 #' @param notes Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.
 #' @param annotate_env If true, draw Env landmarks.
 #' @param show_tree Show the tree? If not, only show the pixel plot.
-#' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixgram output.
+#' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixelgram output.
 #' @param sub Plot subtitle, i.e. region sequenced.  If specified, it appears with "site" below the pixel plot.
 #' @param ... dots, passed to ape::plot.phylo()
 #'
 #' @examples
 #' \dontrun{
-#'   plot( pg <- pixgramr::pixgram(nts=pixgramr::hiv.ref$nts) )
+#'   plot( pg <- pixelgram::pixelgram(nts=pixelgram::hiv.ref$nts) )
 #' }
 #'
 #' @export
-plot.pixgram <- function(x,
+plot.pixelgram <- function(x,
     xform_type=NULL,
     xform_master=NULL,
     leaf_colors=NULL,
@@ -84,11 +84,11 @@ plot.pixgram <- function(x,
 
     dots = list(...)
 
-    if (class(x) != "pixgram")
-	stop("plot.pixgram ERROR: Please specify pixgram object")
+    if (class(x) != "pixelgram")
+	stop("plot.pixelgram ERROR: Please specify pixelgram object")
 
-    x <- pixgram.validate(x)
-    x <- pixgram.reorder(x)
+    x <- pixelgram.validate(x)
+    x <- pixelgram.reorder(x)
 
     if (is.null(x$nt_master) & is.null(x$aa_master))
         x <- set.master(x)
@@ -106,13 +106,13 @@ plot.pixgram <- function(x,
 	x$xform_master = xform_master
 
     if (!is.null(x$nt_master) | !is.null(x$aa_master))
-        x <- pixgram.xform(x)
+        x <- pixelgram.xform(x)
 
 #    if (!is.null(x_lim)) x$x_lim = x_lim # should sanitize
 #    if (!is.null(y_lim)) x$y_lim = y_lim
 
     R <- x
-    class(R) <- "pixgram"
+    class(R) <- "pixelgram"
 
 #    old.par = par()
 #    old.pal = palette()
@@ -141,7 +141,7 @@ plot.pixgram <- function(x,
     if (!is.null(selected_rows) & is.null(selected_row_colors))
         selected_row_colors = rep("#66666666", length(selected_rows))
 
-      R <- pixgram.tree.plot(R,
+      R <- pixelgram.tree.plot(R,
                              leaf_colors=leaf_colors,
                              tip_labels=tip_labels,
                              legend_attributes=legend_attributes,
@@ -167,13 +167,13 @@ plot.pixgram <- function(x,
     }
 
     if (!is.null(R$aas))
-        R <- pixgram.raster.aa(R, vbars=vbars, show_top_axis=show_top_axis)
+        R <- pixelgram.raster.aa(R, vbars=vbars, show_top_axis=show_top_axis)
 
     if (!is.null(R$nts))
 	R$color_lut_type = "nt"
 
     if (!is.null(R$nts) & !R$is_orf)
-        R <- pixgram.raster.nt(R, vbars=vbars, show_top_axis=show_top_axis)
+        R <- pixelgram.raster.nt(R, vbars=vbars, show_top_axis=show_top_axis)
 # to do: add axis options or ...
 
 # the second condition/s implicitly assume env with hxb2 present
@@ -201,7 +201,7 @@ color.node <- function(edge_colors, this_tree, node) {
         mycolor = edge_colors[which(this_tree$edge[,2] == node)]
 
 #	if (is.na(mycolor) | length(mycolor) == 0)
-#	    stop(paste("pixgram ERROR in pixgram::color.node()!  No color specified for", ))
+#	    stop(paste("pixelgram ERROR in pixelgram::color.node()!  No color specified for", ))
 
         sibs = this_tree$edge[which(this_tree$edge[,1] == ancestor & this_tree$edge[,2] != node), 2]
 
@@ -333,7 +333,7 @@ add.legend <- function(L) {
 }
 
 #' @keywords internal
-pixgram.tree.plot <- function(x,
+pixelgram.tree.plot <- function(x,
     leaf_colors=leaf_colors,
     tip_labels=tip_labels,
     edge_widths=edge_widths,
@@ -350,12 +350,12 @@ pixgram.tree.plot <- function(x,
     scale_bar=scale_bar,
     ...) {
 
-    if (class(x) != "pixgram")
-        stop("pixgram.tree.plot ERROR: Please specify pixgram object")
+    if (class(x) != "pixelgram")
+        stop("pixelgram.tree.plot ERROR: Please specify pixelgram object")
 
      R <- x
-     message("*** pixgram.tree.plot ***\n")
-     class(R) <- "pixgram"
+     message("*** pixelgram.tree.plot ***\n")
+     class(R) <- "pixelgram"
 
      if (is.null(R$x_lim) & is.null(R$y_lim)) {
        tree_out <- ape::plot.phylo(R$tre, font=1,
@@ -394,7 +394,7 @@ pixgram.tree.plot <- function(x,
     if (!is.null(leaf_colors)) {
 
         if (any(is.na(leaf_colors)))
-            stop(paste("pixgram.tree.plot() ERROR! Undefined leaf_colors:",
+            stop(paste("pixelgram.tree.plot() ERROR! Undefined leaf_colors:",
 		paste(R$tre$tip.label[which(is.na(leaf_colors))], collapse=" ")))
 
 	if (is.null(edge_colors))
@@ -469,12 +469,12 @@ pixgram.tree.plot <- function(x,
     if (!is.null(tip_labels) & !is.null(tip_labels$pch)) {
 
         if (!is.null(tip_labels) & length(which(is.na(tip_labels$pch))) > 1)
-	    stop(paste("pixgram ERROR! Undefined tip_labels$pch:",
+	    stop(paste("pixelgram ERROR! Undefined tip_labels$pch:",
 		paste(R$tre$tip.label[which(is.na(tip_labels$pch))],
 		    collapse=" ")))
 
 	if (!is.null(tip_labels) & length(which(is.na(tip_labels$col))) > 1)
-	    stop(paste("pixgram ERROR! Undefined tip_labels$col:",
+	    stop(paste("pixelgram ERROR! Undefined tip_labels$col:",
 		paste(R$tre$tip.label[which(is.na(tip_labels$col))],
 		    collapse=" ")))
 
@@ -623,13 +623,13 @@ pixgram.tree.plot <- function(x,
 }
 
 #' @keywords internal
-pixgram.raster.nt <- function(P, vbars, show_top_axis) {
+pixelgram.raster.nt <- function(P, vbars, show_top_axis) {
 
-    if (class(P) != "pixgram")
-	stop("pixgram.raster.nt ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("pixelgram.raster.nt ERROR: Please specify pixelgram object")
 
     R <- P
-    class(R) <- "pixgram"
+    class(R) <- "pixelgram"
 
     if (is.null(R$color_lut_type))
 	R$color_lut_type = "aa"
@@ -817,13 +817,13 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 }
 
 #' @keywords internal
-pixgram.raster.aa <- function(P, vbars, show_top_axis) {
+pixelgram.raster.aa <- function(P, vbars, show_top_axis) {
 
-    if (class(P) != "pixgram")
-	stop("pixgram.raster.aa ERROR: Please specify pixgram object")
+    if (class(P) != "pixelgram")
+	stop("pixelgram.raster.aa ERROR: Please specify pixelgram object")
 
     R <- P
-    class(R) <- "pixgram"
+    class(R) <- "pixelgram"
 
     if (!is.null(R$refseq_lut)) {
 

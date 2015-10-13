@@ -2,18 +2,18 @@
 % Please edit documentation in R/set.output.file.R
 \name{set.output.file}
 \alias{set.output.file}
-\title{Set the output file name and format for saving a rendered pixgram.}
+\title{Set the output file name and format for saving a rendered pixelgram.}
 \usage{
 set.output.file(pg, outfile_name, outfile_format)
 }
 \arguments{
-\item{pg}{Pixgram object.}
+\item{pg}{Pixelgram object.}
 
 \item{outfile_name}{If provided, the output will be written to this file name.}
 
 \item{outfile_format}{If outfile_name is null, this is ignored and the output is written directly with plot(); otherwise, this must be one of "png", "svg", "eps", "pdf", in which case the device-specific driver is called before plot() and closed afterwards.}
 }
 \description{
-Set the output file name and format for saving a rendered pixgram.
+Set the output file name and format for saving a rendered pixelgram.
 }
 

@@ -1,14 +1,14 @@
-#' Set the output file name and format for saving a rendered pixgram.
+#' Set the output file name and format for saving a rendered pixelgram.
 #'
-#' @param pg Pixgram object.
+#' @param pg Pixelgram object.
 #' @param outfile_name If provided, the output will be written to this file name.
 #' @param outfile_format If outfile_name is null, this is ignored and the output is written directly with plot(); otherwise, this must be one of "png", "svg", "eps", "pdf", in which case the device-specific driver is called before plot() and closed afterwards.
 #'
 #' @export
 set.output.file <- function(pg, outfile_name, outfile_format) {
 
-    if (class(pg) != "pixgram")
-	stop("set.output.file ERROR: Please specify pixgram object")
+    if (class(pg) != "pixelgram")
+	stop("set.output.file ERROR: Please specify pixelgram object")
 
     if (is.null(outfile_name)) {
         warning("Null file name")

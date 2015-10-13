@@ -1,4 +1,4 @@
-citHeader("To cite the pixgramr package in publication, please use:")
+citHeader("To cite the pixelgram package in publication, please use:")
 
 citEntry(entry = "Article",
  title	       = "Longitudinal Antigenic Sequences and Sites from Intra-Host Evolution (LASSIE) Identifies Immune-Selected HIV Variants",

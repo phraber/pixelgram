@@ -1,8 +1,8 @@
 #' @keywords internal
 set.refseq <- function(P, is.aa=NULL, use.grepl=F) {
 
-    if (class(P) != "pixgram")
-        stop("ERROR: Please pass a pixgram object to set.refseq()")
+    if (class(P) != "pixelgram")
+        stop("ERROR: Please pass a pixelgram object to set.refseq()")
 
     if (is.aa==F) {
         aln <- P$nts

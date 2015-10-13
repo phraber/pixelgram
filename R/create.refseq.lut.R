@@ -1,8 +1,8 @@
 #' @keywords internal
 create.refseq.lut <- function(P, ref) {
 
-    if (class(P) != "pixgram")
-        stop("ERROR: Please pass a pixgram object to create.refseq.lut()")
+    if (class(P) != "pixelgram")
+        stop("ERROR: Please pass a pixelgram object to create.refseq.lut()")
 
     if (is.null(P$refseq_lut) & !is.null(ref)) {
 

@@ -20,7 +20,7 @@ get.refseq.row <- function(aln, refseq_name, ignore_case=F) {
 	}
 
     } else {
-	stop(paste0("pixgram::get.refseq.row() ERROR: refseq_name '",
+	stop(paste0("pixelgram::get.refseq.row() ERROR: refseq_name '",
 	    refseq_name, "' found more than once in alignment.\n",
 	    "To fix this, please delete the extra entries.\n"))
     }

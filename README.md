@@ -1,4 +1,4 @@
-## pixgramr
+## pixelgram
 ####An R package that implements paired tree (phylogram) and pixel plots to view polymorphisms among aligned sequences.
 
 ####Synopsis
@@ -10,9 +10,9 @@ Any R user can install this package with just a few lines lines of code:
 1. Start R, by whatever method you choose.
 1. Type "install.packages('devtools')"
 1. If prompted to compile a required package from source, you can safely decline without ill effects.
-1. Type "devtools::install_github('phraber/pixgram')".
-1. Type "vignette('pixgramr')"
+1. Type "devtools::install_github('phraber/pixelgram')".
+1. Type "vignette('pixelgram')"
 
-If you cannot view the vignette, please see this PDF file for examples - https://github.com/phraber/pixgram/blob/master/examples.pdf
+If you cannot view the vignette, please see this PDF file for examples - https://github.com/phraber/pixelgram/blob/master/examples.pdf
 
-##### To list all functions and data provided by this package, type "library(help=pixgramr)" from within R.
+##### To list all functions and data provided by this package, type "library(help=pixelgram)" from within R.
