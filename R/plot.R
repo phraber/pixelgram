@@ -553,8 +553,10 @@ pixelgram.tree.plot <- function(x,
 		    ypos.1 <- usr[3] + (usr[4] - usr[3])*0.03
 		    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
 
-		    text(myxpos, ypos.1, pheno_letters[col_num], cex=1/3, adj=c(1/2, 0))
-		    text(myxpos, ypos.2, pheno_letters[col_num], cex=1/3, adj=c(1/2, 1))
+		    text(myxpos, ypos.1, pheno_letters[col_num], 
+		    		 cex=1/3, adj=c(1/2, 1/2))
+		    text(myxpos, ypos.2, pheno_letters[col_num], 
+		    		 cex=1/3, adj=c(1/2, 1/2))
 		}
 	    }
 	}
@@ -765,9 +767,11 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
  	for (x in 1:length(notes$txt)) {
 
  	    x_1 = NULL
+# this causes an error message when using gp120s:
 	    x_1 <- refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[x]))]
 
  	    x_2 = NULL
+# this causes an error message when using gp120s:
 	    x_2 <- refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[x]))]
 
  	    if (!is.null(x_1) & !is.null(x_2) & !is.na(x_1) & !is.na(x_2))
