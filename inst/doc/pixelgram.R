@@ -1,12 +1,11 @@
 ## ---- fig.show='asis', tidy=F, warning=F, message=F, fig.width=6, fig.height=6----
-par(cex=1/2)
 library(pixelgram, warn.conflicts=F, quietly=T)
 
 n <- pixelgram(tre=hiv.ref$tre, nts=hiv.ref$nts,
                        master_name="__consensus__", excise_refseq=F,
                        main="Subtype reference", sub='gp41 ectodomain')
 
-par(mar=c(0,0,1,0), oma=c(0,0,0,0))
+par(mar=c(0,0,1,0), oma=c(0,0,0,0), cex=1/2)
 plot(n, xform_type=2, show_tip_label=T, raster_width=1/4)
 plot(n, xform_type=0, show_tree=F, raster_width=1000)
 
