@@ -38,6 +38,7 @@
 #' @param raster_width Proportionate width of the pixel plot, e.g. 1 indicates equal width.
 #' @param raster_margin Offset in raster portion of the layout, e.g. for heatmap.
 #' @param color_lut_type Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.
+#' @param x_labs Vector of values to plot as labels along x axis of raster plot, e.g. to identify specific sites. 
 #' @param notes Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.
 #' @param annotate_env If true, draw Env landmarks.
 #' @param show_tree Show the tree? If not, only show the pixel plot.
@@ -73,6 +74,7 @@ plot.pixelgram <- function(x,
     raster_width=NULL,
     raster_margin=NULL,
     color_lut_type=NULL,
+x_labs=NULL,
 #    x_lim=NULL,
 #    y_lim=NULL,
     notes=NULL,
@@ -167,7 +169,7 @@ plot.pixelgram <- function(x,
     }
 
     if (!is.null(R$aas))
-        R <- pixelgram.raster.aa(R, vbars=vbars, show_top_axis=show_top_axis)
+        R <- pixelgram.raster.aa(R, vbars=vbars, show_top_axis=show_top_axis, x_labs=x_labs)
 
     if (!is.null(R$nts))
 	R$color_lut_type = "nt"
@@ -821,7 +823,7 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 }
 
 #' @keywords internal
-pixelgram.raster.aa <- function(P, vbars, show_top_axis) {
+pixelgram.raster.aa <- function(P, vbars, show_top_axis, x_labs=NULL) {
 
     if (class(P) != "pixelgram")
 	stop("pixelgram.raster.aa ERROR: Please specify pixelgram object")
@@ -914,12 +916,7 @@ pixelgram.raster.aa <- function(P, vbars, show_top_axis) {
 #-R$raster_width * R$x_lim[2] * raster_margin
 # ncol(R$aas) is number of aligned sites -> min(R$refseq_lut$aln),
 
-    if (!is.null(R$refseq_lut)) {
-
-         axis_xlim = c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin)#0.025)
-
-         my_slope = (ncol(R$aas)-1)/(axis_xlim[2]-axis_xlim[1])
-
+    if (is.null(x_labs)) {
 	 tick_interval = ifelse(ncol(R$aas) >= 3000, 1000,
  	     ifelse(ncol(R$aas) >= 300, 100,
  		 ifelse(ncol(R$aas) >= 200, 50,
@@ -928,18 +925,41 @@ pixelgram.raster.aa <- function(P, vbars, show_top_axis) {
  			     ifelse(ncol(R$aas) >= 40, 10,
  				 ifelse(ncol(R$aas) >= 20, 5, 1)))))))
 
- 	x_locs <- R$refseq_lut$aln[which(R$refseq_lut$aln < ncol(R$aas) &
- 	    R$refseq_lut$l == R$refseq_lut$r & R$refseq_lut$l %% tick_interval == 0)]
+         axis_xlim = c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin)#0.025)
+
+         my_slope = (ncol(R$aas)-1)/(axis_xlim[2]-axis_xlim[1])
+
+        if (!is.null(R$refseq_lut))
+ 	    x_locs <- R$refseq_lut$aln[which(R$refseq_lut$aln < ncol(R$aas) &
+ 	        R$refseq_lut$l == R$refseq_lut$r & R$refseq_lut$l %% tick_interval == 0)]
+        else 
+ 	    x_locs <- 1:ncol(R$aas)
 
  	x_locs = (x_locs-1)/my_slope - R$raster_width * R$x_lim[2]
 # #	axis_xlim = c(1, ncol(R$aas)) / my_slope# - R$raster_width * R$x_lim[2]
 
          x_labs <- R$refseq_lut$l[which(R$refseq_lut$l == R$refseq_lut$r &
  		R$refseq_lut$l %% tick_interval == 0)]
-
 ### to do: think about what to do when my_lim %in% x_locs
  	my_cexl=4/5
  	my_cexa=2/3
+    } else {
+
+         axis_xlim = c(-R$raster_width * R$x_lim[2], -R$raster_width * R$x_lim[2] * R$raster_margin)#0.025)
+
+         my_slope = (ncol(R$aas))/(axis_xlim[2]-axis_xlim[1])
+#         my_slope = (ncol(R$aas)-1)/(axis_xlim[2]-axis_xlim[1])
+
+	x_locs = 1:length(x_labs)
+ 	x_locs = (x_locs - 1/2)/my_slope - R$raster_width * R$x_lim[2]
+### to do: think about what to do when my_lim %in% x_locs
+ 	my_cexl=1/5
+ 	my_cexa=1/2
+    }
+
+    if (length(x_labs) != length(x_locs))
+	message("WARNING: Number of raster x-axis labels differs from the number of locations.")
+
 
 #If either line or pos is set, they (rather than par("mgp")[3])
 #determine the position of the axis line and tick marks, and the tick
@@ -977,10 +997,10 @@ pixelgram.raster.aa <- function(P, vbars, show_top_axis) {
 		lwd=1/2)#,
 #		tcl=-my.tcl)#k=-0.5/nrow(R$aas))
 
- 	} else {
- 	    message(paste("* NO xlabs=", paste(x_labs, collapse=" ")))
- 	    message(paste("* NO xlocs=", paste(x_locs, collapse=" ")))
- 	}
+# 	} else {
+# 	    message(paste("* NO xlabs=", paste(x_labs, collapse=" ")))
+# 	    message(paste("* NO xlocs=", paste(x_locs, collapse=" ")))
+# 	}
       }
     }
 
