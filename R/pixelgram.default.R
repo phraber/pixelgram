@@ -404,6 +404,26 @@ create.nj.tree <- function(P) {
     return ( P )
 }
 
+# #' @keywords internal
+# create.comb.tree <- function(P) {
+#
+#  if (class(P) != "pixelgram")
+#    stop("create.comb.tree ERROR: Please specify pixelgram object")
+  # from Will Fischer scripts/branch_color4.pl:
+  # generates a bifurcating tree
+  # make a "comb" tree (zero-branch-length bifurcations at base)
+  # for a list of taxon names
+#  @labels      = @_;
+#  $newick_tree = pop @labels;
+#  while ( my $label = pop @labels ) {
+#    newick_tree = paste0("(", label, ":1,", newick_tree, "):1")
+#  }
+#  newick_tree <- paste0(newick_tree, ';')
+# #  newick_tree <- gsub(")", "):0", newick_tree)
+#  P$tre <- ape::as.phylo(newick_tree)
+#  return (P)
+#}
+
 #' @keywords internal
 pixelgram.validate <- function(P) {
 
@@ -666,7 +686,7 @@ pixelgram.xform <- function(P) {
 
         for (i in 1:ncol(P$aas)) {
 
-            x <- replace(P$aas[, i], 
+            x <- replace(P$aas[, i],
 		which(P$aas[, i] == P$aa_master[i]), '=')
 
 	    if (!P$aa_master[i] %in% pos.aas)
@@ -686,7 +706,7 @@ pixelgram.xform <- function(P) {
 #                  P$aa_rast[, i] <- sapply(1:nrow(P$aas), function(j)
 #  		    ifelse(P$aas[j,i] == P$aa_master[i], '=', # match t/f
 #  			ifelse(P$aas[j,i] == 'o', 'o', # gain of png site
-#  			    ifelse(!P$aa_master[i] %in% c('r','k','h') & 
+#  			    ifelse(!P$aa_master[i] %in% c('r','k','h') &
 #                               P$aas[j,i] %in% c('r','k','h'), '+',
 #  				    ifelse(!P$aas[i] %in% c('d','e') &
 #                                       P$aas[j,i] %in% c('d','e'), '_',
