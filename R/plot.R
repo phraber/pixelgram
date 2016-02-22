@@ -38,7 +38,7 @@
 #' @param raster_width Proportionate width of the pixel plot, e.g. 1 indicates equal width.
 #' @param raster_margin Offset in raster portion of the layout, e.g. for heatmap.
 #' @param color_lut_type Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.
-#' @param x_labs Vector of values to plot as labels along x axis of raster plot, e.g. to identify specific sites. 
+#' @param x_labs Vector of values to plot as labels along x axis of raster plot, e.g. to identify specific sites.
 #' @param notes Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.
 #' @param annotate_env If true, draw Env landmarks.
 #' @param show_tree Show the tree? If not, only show the pixel plot.
@@ -242,7 +242,7 @@ color.node <- function(edge_colors, this_tree, node) {
 #' NB: the default color is currently hard-coded, which seems unwise.
 #' Some trees may not be amenable to the recursion scheme used here.
 #' Alternatively, starting to label on the root node may be a bad idea.
-#' On tree was reported to have caused a problem, so it is worth keeping in mind.
+#' One tree was reported to have caused a problem, so it is worth keeping in mind.
 #'
 #' @param T ape::phylo() tree object.
 #' @param tip_colors vector of colors, whether rgb hex or integers, whose order matches the names in the tree tip.label slot.
@@ -393,18 +393,18 @@ pixelgram.tree.plot <- function(x,
     plot_size <- dev.size("px")
     R$my_cex <- 5/4*(plot_size[2]/length(R$tre$tip.label))/12
 
-    if (!is.null(leaf_colors)) {
+    if (R$show_tree & !is.null(leaf_colors)) { # pth 02102016 not sure these should be combined
 
-        if (any(is.na(leaf_colors)))
-            stop(paste("pixelgram.tree.plot() ERROR! Undefined leaf_colors:",
-		paste(R$tre$tip.label[which(is.na(leaf_colors))], collapse=" ")))
+      if (any(is.na(leaf_colors)))
+        stop(paste("pixelgram.tree.plot() ERROR! Undefined leaf_colors:",
+                   paste(R$tre$tip.label[which(is.na(leaf_colors))], collapse=" ")))
 
-	if (is.null(edge_colors))
-            edge_colors <- color.edges(R$tre, leaf_colors)
+      if (is.null(edge_colors))
+        edge_colors <- color.edges(R$tre, leaf_colors)
 
     } else {
-      	if (is.null(edge_colors))
-            edge_colors = "black" # default.edge.color
+      if (is.null(edge_colors))
+        edge_colors = "black" # default.edge.color
     }
 
     if (is.null(edge_widths))
@@ -460,12 +460,17 @@ pixelgram.tree.plot <- function(x,
                                 x.lim=R$x_lim,
                                 y.lim=R$y_lim,
                                 plot=R$show_tree,
-				edge.width=edge_widths,
+                                edge.width=edge_widths,
                                 edge.color=edge_colors,
                                 tip.color=tip_labels$col, # NOTE THIS IS NOT ROBUST! assumes tree order is unchanged
                                 show.tip.label=show_tip_label, ...) #
 
     R$tre$tip.label = safe.tiplabels
+
+    if (!R$show_tree & show_tip_label)
+      for (i in 1:length(R$tre$tip.label))
+        text(0, i, #-1.01 * R$raster_width * R$x_lim[2],
+             adj=0, R$tre$tip.label[i], cex=R$my_cex, col=tip_labels$col[i])
 
     # design issue here is how to map leaf names to { pch, bg, col }
     if (!is.null(tip_labels) & !is.null(tip_labels$pch)) {
@@ -486,6 +491,7 @@ pixelgram.tree.plot <- function(x,
                   bg=tip_labels$bgs, #adj=0,
                   cex=R$my_cex, lwd=1/2)
 
+
 # to do: position properly with raster_margin considered:
 	if (plot_margin_points) {
 
@@ -494,9 +500,9 @@ pixelgram.tree.plot <- function(x,
 		    for (i in 1:length(R$tre$tip.label))
 		        points(-1.01 * R$raster_width * R$x_lim[2], i, col=leaf_colors[i], cex=R$my_cex, lwd=1/2, pch=15)
 
-		if (!is.null(tip_labels$col)) {
+##		if (!is.null(tip_labels$col)) {
 
-	        if (is.null(tip_labels$pch) | any(is.na(tip_labels$pch))) {
+##	        if (is.null(tip_labels$pch) | any(is.na(tip_labels$pch))) {
 
 #		      for (i in 1:length(R$tre$tip.label))
 #		        points(-0.02 * R$raster_width * R$x_lim[2], i, col=tip_labels$col[i], cex=R$my_cex, lwd=1/2, pch=15)
@@ -509,8 +515,8 @@ pixelgram.tree.plot <- function(x,
 #		        points(-0.01 * R$raster_width * R$x_lim[2], i,
 #			      col=tip_labels$col[i], pch=tip_labels$pch[i], bg=tip_labels$bgs[i], cex=R$my_cex, lwd=1/2)
 			    # bgs could be a scalar or vector
-		}
-	    }
+##		}
+##	    }
         }
     }
         ### HERE we plot the phenotypic/binding/neutralization data
@@ -555,9 +561,9 @@ pixelgram.tree.plot <- function(x,
 		    ypos.1 <- usr[3] + (usr[4] - usr[3])*0.03
 		    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
 
-		    text(myxpos, ypos.1, pheno_letters[col_num], 
+		    text(myxpos, ypos.1, pheno_letters[col_num],
 		    		 cex=1/3, adj=c(1/2, 1/2))
-		    text(myxpos, ypos.2, pheno_letters[col_num], 
+		    text(myxpos, ypos.2, pheno_letters[col_num],
 		    		 cex=1/3, adj=c(1/2, 1/2))
 		}
 	    }
@@ -604,13 +610,14 @@ pixelgram.tree.plot <- function(x,
         add.legend(legend_attributes)
     }
 
-    if (!is.null(scale_bar)) {
+    if (R$show_tree & !is.null(scale_bar)) {
 
 	sb.xpos = ifelse(is.null(scale_bar$pos[1]), NULL, scale_bar$pos[1])
 	sb.ypos = ifelse(is.null(scale_bar$pos[2]), NULL, scale_bar$pos[2])
 
-	ape::add.scale.bar(sb.xpos, sb.ypos, length=scale_bar$len,
-	    lwd=scale_bar$lwd, cex=1/1000)
+
+	  ape::add.scale.bar(sb.xpos, sb.ypos, length=scale_bar$len,
+	                     lwd=scale_bar$lwd, cex=1/1000)
 
 	if (R$invert_y == T) {
 	    text(sb.xpos+scale_bar$len/2, sb.ypos-1, scale_bar$text,
@@ -805,7 +812,7 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 		      !is.na(l.xpos) & !is.na(r.xpos)) {
 
 		    if (R$xform_master) # use blank space at top of pixel plot
- 			text(x=mean(c(l.xpos, r.xpos)), 
+ 			text(x=mean(c(l.xpos, r.xpos)),
 			    y=1, # could figure out which row is master sequence row but whatever
 			    notes$txt[i], #pos=n_s,
 			    cex=2/3)
@@ -932,7 +939,7 @@ pixelgram.raster.aa <- function(P, vbars, show_top_axis, x_labs=NULL) {
         if (!is.null(R$refseq_lut))
  	    x_locs <- R$refseq_lut$aln[which(R$refseq_lut$aln < ncol(R$aas) &
  	        R$refseq_lut$l == R$refseq_lut$r & R$refseq_lut$l %% tick_interval == 0)]
-        else 
+        else
  	    x_locs <- 1:ncol(R$aas)
 
  	x_locs = (x_locs-1)/my_slope - R$raster_width * R$x_lim[2]

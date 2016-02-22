@@ -21,6 +21,7 @@ pixelgram.default <- function(...) UseMethod("pixelgram")
 #' @param aas seqinr protein alignment in memory.
 #' @param alignment_format Format of alignment file/s; must be one of these: \code{"fasta"}, \code{"clustal"}, \code{"phylip"}, \code{"msf"}, or \code{"mase"}.
 #' @param is_orf flag to indicate the nt alignment is +1 codon aligned
+#' @param pngs2o Switch to mark asparagines (N) in PNG motifs as O.
 #' @param refseq_lut Look-up-table for reference numbering of alignment positions
 #' @param refseq_name Reference sequence name in the alignment.  (Do not confuse "reference" sequence, used for numbering, with "master" sequence, used for coloring.)
 #' @param excise_refseq Should the reference sequence be removed from the alignment before rendering?
@@ -62,6 +63,7 @@ pixelgram <- function(tre_file=NULL,
                             aas=NULL,
 			    alignment_format="fasta",
 			    is_orf=F,
+			    pngs2o=F,
 
                             refseq_lut=NULL,
 			    refseq_name="HXB2",
@@ -89,7 +91,7 @@ main=NULL, sub=NULL) {
               aas_file=aas_file,
 	      alignment_format=alignment_format,
               is_orf=is_orf,
-
+	      pngs2o=pngs2o,
               tre=tre,
               nts=nts,
               aas=aas,
@@ -168,9 +170,11 @@ main=NULL, sub=NULL) {
 #' @param f alignment file name
 #' @param file_type Specifies alignment file type.  Must be "aa", "nt", or "codon".
 #' @param alignment_format Alignment file format, one "fasta", "clustal", "phylip", "msf", or "mase"
+#' @param pngs2o Switch to mark asparagines (N) in PNG motifs as O.
 #' @return updated pixelgram object
 #' @export
-set.aln.file <- function(P, f, file_type='aa', alignment_format='fasta') {
+set.aln.file <- function(P, f, file_type='aa', alignment_format='fasta', 
+    pngs2o=NULL) {
 
     if (class(P) != "pixelgram")
 	stop("set.aln.file ERROR: Please specify a valid pixelgram object")
@@ -200,6 +204,14 @@ set.aln.file <- function(P, f, file_type='aa', alignment_format='fasta') {
 #	P$aa_rast = P$aas
     }
 
+    if (!is.null(pngs2o))
+	P$pngs2o = pngs2o
+
+    if (P$pngs2o)
+	P$aas <- pngs2o(P$aas)
+    else
+	P$aas <- unset.pngs2o(P$aas)
+
     return ( P )
 }
 
@@ -215,7 +227,9 @@ set.aa_aln.from.file <- function(P, alignment_format='fasta') {
     if (!is.null(P$aas_file)) {
 
 	if (file.exists(P$aas_file))
-		aas_seqinr <- seqinr::read.alignment(P$aas_file, alignment_format)
+	    aas_seqinr <- seqinr::read.alignment(P$aas_file, alignment_format)
+        else 
+	    stop(paste("pixelgram ERROR: Cannot find file", P$aas_file))
 
         if (!is.null(aas_seqinr))
             P$aas <- tolower(seqinr::as.matrix.alignment(aas_seqinr))

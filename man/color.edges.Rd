@@ -21,6 +21,6 @@ Branches with descendents that have different colors will be represented with th
 NB: the default color is currently hard-coded, which seems unwise.
 Some trees may not be amenable to the recursion scheme used here.
 Alternatively, starting to label on the root node may be a bad idea.
-On tree was reported to have caused a problem, so it is worth keeping in mind.
+One tree was reported to have caused a problem, so it is worth keeping in mind.
 }
 

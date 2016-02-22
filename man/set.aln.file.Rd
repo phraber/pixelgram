@@ -4,7 +4,8 @@
 \alias{set.aln.file}
 \title{Sets the alignment file, whether nt or aa.  Also sets the refseq.}
 \usage{
-set.aln.file(P, f, file_type = "aa", alignment_format = "fasta")
+set.aln.file(P, f, file_type = "aa", alignment_format = "fasta",
+  pngs2o = NULL)
 }
 \arguments{
 \item{P}{pixelgram object}
@@ -14,6 +15,8 @@ set.aln.file(P, f, file_type = "aa", alignment_format = "fasta")
 \item{file_type}{Specifies alignment file type.  Must be "aa", "nt", or "codon".}
 
 \item{alignment_format}{Alignment file format, one "fasta", "clustal", "phylip", "msf", or "mase"}
+
+\item{pngs2o}{Switch to mark asparagines (N) in PNG motifs as O.}
 }
 \value{
 updated pixelgram object
