@@ -562,9 +562,9 @@ pixelgram.tree.plot <- function(x,
 		    ypos.2 <- usr[3] + (usr[4] - usr[3])*0.97
 
 		    text(myxpos, ypos.1, pheno_letters[col_num],
-		    		 cex=1/3, adj=c(1/2, 1/2))
+		    		 cex=2/3, adj=c(1/2, 2/2))
 		    text(myxpos, ypos.2, pheno_letters[col_num],
-		    		 cex=1/3, adj=c(1/2, 1/2))
+		    		 cex=2/3, adj=c(1/2, 0/2))
 		}
 	    }
 	}
