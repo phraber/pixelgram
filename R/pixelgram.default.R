@@ -227,7 +227,7 @@ set.aa_aln.from.file <- function(P, alignment_format='fasta') {
     if (!is.null(P$aas_file)) {
 
 	if (file.exists(P$aas_file))
-	    aas_seqinr <- seqinr::read.alignment(P$aas_file, alignment_format)
+	    try(aas_seqinr <- seqinr::read.alignment(P$aas_file, alignment_format))
         else 
 	    stop(paste("pixelgram ERROR: Cannot find file", P$aas_file))
 
@@ -253,7 +253,7 @@ set.nt_aln.from.file <- function(P, alignment_format='fasta') {
     if (!is.null(P$nts_file)) {
 
 	if (file.exists(P$nts_file))
-	   nts_seqinr <- seqinr::read.alignment(P$nts_file, alignment_format)
+	   try(nts_seqinr <- seqinr::read.alignment(P$nts_file, alignment_format))
 
         if (!is.null(nts_seqinr))
             P$nts <- tolower(seqinr::as.matrix.alignment(nts_seqinr))
@@ -324,7 +324,7 @@ set.tree.from.file <- function(P) {
 
     if (!is.null(P$tre_file))
         if (file.exists(P$tre_file))
-	    P$tre <- ape::read.tree(P$tre_file)
+	    try(P$tre <- ape::read.tree(P$tre_file))
 ## again note that we pass through intact if the file is null
     return ( P )
 }
