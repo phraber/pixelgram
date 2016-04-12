@@ -89,8 +89,8 @@ x_labs=NULL,
     if (class(x) != "pixelgram")
 	stop("plot.pixelgram ERROR: Please specify pixelgram object")
 
-    x <- pixelgram.validate(x)
-    x <- pixelgram.reorder(x)
+    x <- try(pixelgram.validate(x))
+    x <- try(pixelgram.reorder(x))
 
     if (is.null(x$nt_master) & is.null(x$aa_master))
         x <- set.master(x)

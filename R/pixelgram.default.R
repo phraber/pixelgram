@@ -408,7 +408,7 @@ create.nj.tree <- function(P) {
     if (!is.null(P$master_name)) {
 
 	if (!P$master_name %in% c("__consensus__", "__none__")) {
-	    P <- set.master.name(P)
+	    P <- try(set.master.name(P))
             P$tre <- ape::root(P$tre, P$master_name)
         }
     }
@@ -461,7 +461,7 @@ pixelgram.validate <- function(P) {
     if (!is.null(P$nts)) {
 
 	if (is.null(P$tre))
-	    P <- create.nj.tree(P)
+	    P <- try(create.nj.tree(P))
 
         if (length(P$tre$tip.label) != nrow(P$nts))
             cat(paste(
@@ -469,11 +469,11 @@ pixelgram.validate <- function(P) {
                 length(P$tre$tip.label), " leaves vs. ",
                 nrow(P$nts), " aligned nts.\n"))
 
-        if (length(which(!rownames(P$nts) %in% P$tre$tip.label) > 0))
-                stop(paste(
-                    "pixelgram ERROR: Tree lacks sequences found in nt alignment:",
-                    paste(rownames(P$nts)[which(!rownames(P$nts) %in% P$tre$tip.label)],
-		    collapse=" ")))
+        if (any(!rownames(P$nts) %in% c(P$refseq_name, P$tre$tip.label)))
+            stop(paste(
+                "pixelgram ERROR: Tree lacks sequences found in nt alignment:",
+                paste(rownames(P$nts)[which(!rownames(P$nts) %in% 
+		    c(P$refseq_name, P$tre$tip.label))], collapse=" ")))
     }
 
     # verify one-to-one mapping of tree tip.labels onto aas
@@ -485,12 +485,11 @@ pixelgram.validate <- function(P) {
                     length(P$tre$tip.label), " leaves vs. ",
                     nrow(P$aas), " aligned aas.\n")
 
-            if (length(which(!rownames(P$aas) %in% P$tre$tip.label) > 0))
+            if (any(!rownames(P$aas) %in% c(P$refseq_name, P$tre$tip.label)))
                 stop(paste(
-                    "pixelgram ERROR: Tree lacks sequences found in AA alignment:",
-                    paste(rownames(P$aas)[which(!rownames(P$aas) %in% P$tre$tip.label)],
-		    collapse=" ")))
-
+                "pixelgram ERROR: Tree lacks sequences found in AA alignment:",
+                paste(rownames(P$aas)[which(!rownames(P$aas) %in% 
+		    c(P$refseq_name, P$tre$tip.label))], collapse=" ")))
         }
     }
 
@@ -506,10 +505,12 @@ pixelgram.reorder <- function(P) {
 
     message("*** Reordering ***")
 
+    if (is.null(P$tre))
+       return ( P )
+
     R <- P
     class(R) <- "pixelgram"
-
-    if (!is.null(P$nts) & !is.null(P$tre)) {
+    if (!is.null(P$nts)) {
 
         nt_roworder <- sapply(1:length(P$tre$tip.label), function(i)
             which(rownames(P$nts) == P$tre$tip.label[i]))
@@ -522,7 +523,7 @@ pixelgram.reorder <- function(P) {
         message("*** Reordered nts ok ***")
     }
 
-    if (!is.null(P$aas) & !is.null(P$tre)) {
+    if (!is.null(P$aas)) {
 
         aa_roworder <- sapply(1:length(P$tre$tip.label), function(i)
             which(rownames(P$aas) ==
