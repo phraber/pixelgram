@@ -16,3 +16,8 @@ Any R user can install this package with just a few lines lines of code:
 If you cannot view the vignette, please see this PDF file for examples - https://github.com/phraber/pixelgram/blob/master/examples.pdf
 
 ##### To list all functions and data provided by this package, type "library(help=pixelgram)" from within R.
+
+###See Also
+Check out the new shiny interface, which runs this code interactively:  
+
+https://github.com/phraber/mpgram/
