@@ -1,4 +1,5 @@
 \.pdf$
 ^.*\.Rproj$
+README.md
 ^\.Rproj\.user$
 ^data-raw$
