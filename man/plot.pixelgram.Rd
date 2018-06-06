@@ -61,7 +61,7 @@
 
 \item{x_labs}{Vector of values to plot as labels along x axis of raster plot, e.g. to identify specific sites.}
 
-\item{notes}{Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.}
+\item{notes}{Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "col" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by col (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.}
 
 \item{annotate_env}{If true, draw Env landmarks.}
 
@@ -97,4 +97,3 @@ Entries in the \code{legend_attributes} list argument should be named \code{'loc
 }
 
 }
-

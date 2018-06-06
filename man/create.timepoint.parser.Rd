@@ -22,4 +22,3 @@ tp <- create.timepoint.parser(field.sep=".", field.num=1)
 tp <- create.timepoint.parser(field.sep="_", field.num=2)
 
 }
-

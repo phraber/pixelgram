@@ -33,4 +33,3 @@ nucleotides 1657-2055 (gp160 amino acids 553-685) and gp41 nucleotides
 124-522 (gp41 amino acids 42-174).
 }
 \keyword{datasets}
-

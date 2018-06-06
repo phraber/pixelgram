@@ -39,7 +39,7 @@
 #' @param raster_margin Offset in raster portion of the layout, e.g. for heatmap.
 #' @param color_lut_type Optional string for non-default color lookup table, currently only implemented for amino acids as 'charge' and 'taylor'.
 #' @param x_labs Vector of values to plot as labels along x axis of raster plot, e.g. to identify specific sites.
-#' @param notes Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "clr" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by clr (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.
+#' @param notes Is a named list used to draw landmarks for the region sequenced, with elements "Lhs", "Rhs", "col" and "txt".  Using numbering from the reference sequence lookup-table, rectangles are drawn bounded by Lhs and Rhs for each entry and filled with the color specified by col (using alpha transparency gives better results).  If present, labels with values in "txt" are plotted along the margin.  If annotate_env is true, these values are populated internally for the HIV-1 env.
 #' @param annotate_env If true, draw Env landmarks.
 #' @param show_tree Show the tree? If not, only show the pixel plot.
 #' @param main Plot title, e.g. coded subject id.  If given, it is plotted at the top of the pixelgram output.
@@ -728,12 +728,12 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 
     if (is.null(notes)) {
 	notes <- list()
-	notes$Lhs <- c(132, 185, 276, 396, 459, 511, 30)
-	notes$Rhs <- c(152, 190, 283, 410, 466, 512, 31)
-	notes$txt <- c('V1', 'V2', 'Loop D', 'V4', 'V5', '', '')
-#	notes$Lhs <- c(132, 185, 276, 363, 396, 459, 511, 30)
-#	notes$Rhs <- c(152, 190, 283, 373, 410, 466, 512, 31)
-#	notes$txt <- c('V1', 'V2', 'Loop D', 'CD4 Loop', 'V4', 'V5', '', '')
+	notes$Lhs <- c(132, 185, 298, 396, 459, 511, 30)
+	notes$Rhs <- c(152, 190, 331, 410, 466, 512, 31)
+	notes$txt <- c('V1', 'V2', 'V3', 'V4', 'V5', '', '')
+#	notes$Lhs <- c(132, 185, 276, 396, 459, 511, 30)
+#	notes$Rhs <- c(152, 190, 283, 410, 466, 512, 31)
+#	notes$txt <- c('V1', 'V2', 'Loop D', 'V4', 'V5', '', '')
     } else {
 	if (is.null(notes$Lhs) | is.null(notes$Rhs))
 	    return (R)
@@ -741,7 +741,7 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 	    return (R)
 
 	if (!is.null(notes$txt))
-	    if (!character(notes$col))
+	    if (!is.character(notes$col))
 		return (R)
 
 	if (!is.null(notes$col))
@@ -777,11 +777,11 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
 
  	    x_1 = NULL
 # this causes an error message when using gp120s:
-	    x_1 <- refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[x]))]
+	    x_1 <- try(refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[x]))])
 
  	    x_2 = NULL
 # this causes an error message when using gp120s:
-	    x_2 <- refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[x]))]
+	    x_2 <- try(refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[x]))])
 
  	    if (!is.null(x_1) & !is.null(x_2) & !is.na(x_1) & !is.na(x_2))
  		rect(x_1, y_lim[1], x_2, y_lim[2], border=NA, col=clr)
@@ -793,10 +793,10 @@ annotate.region <- function(R, notes=NULL, y_lim=NULL) {
  	    for (i in 1:length(notes$txt)) {
 
  		l.xpos <- NULL
-		l.xpos = refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[i]))]
+		l.xpos = try(refseq_lut$aln[min(which(refseq_lut$l==notes$Lhs[i]))])
 
  		r.xpos <- NULL
-		r.xpos = refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[i]))]
+		r.xpos = try(refseq_lut$aln[max(which(refseq_lut$r==notes$Rhs[i]))])
 
 		usr <- par('usr')
 

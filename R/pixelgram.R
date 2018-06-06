@@ -6,5 +6,5 @@
 #'
 #' @docType package
 #' @name pixelgram
-#' @seealso \code{\link{pixelgram}} \code{\link{plot}}
+#' @seealso \code{\link{plot.pixelgram}}
 NULL

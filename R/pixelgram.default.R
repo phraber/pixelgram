@@ -149,7 +149,8 @@ main=NULL, sub=NULL) {
         P <- set.aln.file(P, aas_file, "aa", P$alignment_format)
 
     if (!is.null(P$aas))
-	P <- set.refseq(P, is.aa=T) # otherwise this may never get called
+	if (is.null(P$nts)) # don't call twice if we translated immediately above
+	    P <- set.refseq(P, is.aa=T) # otherwise this may never get called
 
     return ( P )  ### BEWARE that this has not yet been validated
 }
@@ -481,9 +482,10 @@ pixelgram.validate <- function(P) {
 
         if (!is.null(P$tre)) {
             if (length(P$tre$tip.label) != nrow(P$aas))
-                warning("Number of sequences differs between tree and aa alignment: tree has ",
+#                warning("Number of sequences differs between tree and aa alignment: tree has ",
+                cat(paste("Number of sequences differs between tree and aa alignment: tree has ",
                     length(P$tre$tip.label), " leaves vs. ",
-                    nrow(P$aas), " aligned aas.\n")
+                    nrow(P$aas), " aligned aas.\n"))
 
             if (any(!rownames(P$aas) %in% c(P$refseq_name, P$tre$tip.label)))
                 stop(paste(

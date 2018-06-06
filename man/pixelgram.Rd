@@ -4,6 +4,7 @@
 \name{pixelgram}
 \alias{pixelgram}
 \alias{pixelgram-package}
+\alias{pixelgram}
 \title{pixelgram: Display a pixel plot and phylogram of aligned sequences.}
 \usage{
 pixelgram(tre_file = NULL, tre = NULL, nts_file = NULL, nts = NULL,
@@ -87,7 +88,7 @@ The option \code{xform_type} is an integer from 0 to 3.  The default (0) means n
 
 }
 \seealso{
-\code{\link{pixelgram}} \code{\link{plot}}
+\code{\link{plot.pixelgram}}
 
 External methods used to translate nts to aas and build a tree from nts:
 \code{\link{seqinr}{translate}}, \code{\link{ape}{bionj}}, and \code{\link{ape}{dist.dna}}
@@ -96,4 +97,3 @@ Online examples that are precursors to this package:
 \url{http://hiv.lanl.gov/content/sequence/pixel/pixel.html} and
 \url{http://hiv.lanl.gov/content/sequence/HIGHLIGHT/highlighter_top.html}.
 }
-

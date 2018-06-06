@@ -16,4 +16,3 @@ or (b) read the modified table into memory and map it to the color_lut slot
 in the pixelgram object when instantiating or plotting.
 }
 \keyword{datasets}
-

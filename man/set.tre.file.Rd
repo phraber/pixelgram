@@ -17,4 +17,3 @@ Updated pixelgram object
 \description{
 Assign a Newick-formatted tree file to a pixelgram object.
 }
-

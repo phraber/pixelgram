@@ -24,4 +24,3 @@ updated pixelgram object
 \description{
 Sets the alignment file, whether nt or aa.  Also sets the refseq.
 }
-
